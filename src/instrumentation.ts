@@ -1,9 +1,19 @@
 import * as Sentry from "@sentry/nextjs";
 
 export async function register() {
-  if (!process.env.NEXT_PUBLIC_SENTRY_DSN) return;
   if (process.env.NEXT_RUNTIME === "nodejs") {
-    await import("./sentry.server.config");
+    // Initialize Sentry error tracking
+    if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
+      await import("./sentry.server.config");
+    }
+
+    // Initialize node-cron scheduler (for local dev / self-hosted)
+    try {
+      const { initializeCronScheduler } = await import("./server/services/cron/scheduler");
+      await initializeCronScheduler();
+    } catch (err) {
+      console.error("[Instrumentation] Failed to initialize cron scheduler:", err);
+    }
   }
 }
 

@@ -23,6 +23,8 @@ const envSchema = z.object({
   NYLAS_API_URI: z.string().url().default("https://api.us.nylas.com"),
   /** Shared secret Vercel Cron sends in Authorization: Bearer <…>. Without it, /api/cron/* is unreachable. */
   CRON_SECRET: z.string().optional(),
+  /** Set to "true" to disable node-cron scheduler (useful for testing or multi-instance setups). */
+  CRON_DISABLED: z.string().optional(),
   /** Vercel Blob read/write token (https://vercel.com/storage/blob). Without it, interview media upload is disabled. */
   BLOB_READ_WRITE_TOKEN: z.string().optional(),
   /** Whisper transcription model — defaults to OpenAI's `whisper-1`. */
