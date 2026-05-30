@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CREMEN Smart Water — System Documentation</title>
+<link rel="stylesheet" href="/styles.css" />
+<style>
+  /* SVG diagram helpers (scoped to inline schematics) */
+  .svg-frame text { font-family: var(--sans); fill: var(--text); }
+  .svg-frame .box { fill: var(--surface); stroke: var(--border); stroke-width: 1.5; rx: 10; }
+  .svg-frame .box.esp { fill: #14324a; stroke: var(--water); stroke-width: 2; }
+  .svg-frame .box.sensor { stroke: var(--teal); }
+  .svg-frame .box.act { stroke: var(--amber); }
+  .svg-frame .box.pwr { stroke: var(--green); }
+  .svg-frame .box.comm { stroke: var(--violet); }
+  .svg-frame .title { font-weight: 700; font-size: 14px; }
+  .svg-frame .sub { fill: var(--text-dim); font-size: 11px; }
+  .svg-frame .wire { stroke: #5b86a3; stroke-width: 2; fill: none; }
+  .svg-frame .wire.pwr { stroke: var(--green); stroke-dasharray: 5 4; }
+  .svg-frame .wire.sig { stroke: var(--water); }
+  .svg-frame .wlbl { fill: var(--text-faint); font-size: 10px; font-family: var(--mono); }
+  .svg-frame .pin { fill: var(--amber); font-family: var(--mono); font-size: 11px; font-weight: 700; }
+  .svg-frame .grp { fill: var(--text); font-size: 12px; font-weight: 700; letter-spacing: .04em; }
+</style>
+</head>
+<body>
+
+<!-- ============== NAV ============== -->
+<header class="topnav">
+  <div class="wrap">
+    <span class="brand"><span class="drop">◈</span> CREMEN <small>Smart Water</small></span>
+    <nav>
+      <a href="#overview">Overview</a>
+      <a href="#evolution">Strategy</a>
+      <a href="#flow">Flow</a>
+      <a href="#users">Users</a>
+      <a href="#models">Models</a>
+      <a href="#builder">Configure</a>
+      <a href="#circuits">Circuits</a>
+      <a href="#pins">Schematics</a>
+      <a href="#oled">OLED UI</a>
+      <a href="#buttons">Controls</a>
+      <a href="#apps">Apps</a>
+      <a href="#cloud">Cloud</a>
+      <a href="#bom">Pricing</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ============== HERO ============== -->
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow">.cdcos · System Revision 2026.05.29-FINAL</span>
+    <h1>CREMEN Smart Water<br/>IoT Ecosystem</h1>
+    <p class="lead">Dual-node local Wi-Fi tank &amp; motor control with full-stack cloud sync —
+       end-to-end architecture, circuits, UI and pricing in one document.</p>
+    <div class="badges">
+      <span class="badge agri">🌾 Model A · Agricultural Retrofit</span>
+      <span class="badge urban">🏙️ Model B · Urban Advanced Grid</span>
+      <span class="badge free">☁️ Software ₹0 / month</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============== OVERVIEW ============== -->
+<section id="overview"><div class="wrap">
+  <div class="sec-head">
+    <div class="kicker">01 · Overview</div>
+    <h2>A three-tier system</h2>
+    <p>A battery sensor node talks to a mains-powered gateway over local Wi-Fi; the gateway controls
+       hardware locally and mirrors everything to the cloud for the web and mobile apps.</p>
+  </div>
+  <div class="grid cols-3">
+    <div class="card">
+      <h3><span class="ico">🛰️</span> Node 1 — Tank Unit</h3>
+      <p>Roof-mounted, battery powered. Reads water level, TDS purity and pH, then transmits over local Wi-Fi.</p>
+      <span class="pill">2–3 yr battery · wakes 4×/day</span>
+    </div>
+    <div class="card">
+      <h3><span class="ico">⚙️</span> Node 2 — Motor Gateway</h3>
+      <p>Mains powered Smart Cloud Gateway. Drives relays, valve &amp; cleaning, shows OLED status, buffers to flash, syncs to cloud.</p>
+      <span class="pill">local control + cloud bridge</span>
+    </div>
+    <div class="card">
+      <h3><span class="ico">☁️</span> Cloud &amp; Apps</h3>
+      <p>Firebase real-time database fans live telemetry out to the Next.js web panel and the Flutter mobile app.</p>
+      <span class="pill">updates &lt; 400 ms</span>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============== EVOLUTION ============== -->
+<section id="evolution"><div class="wrap">
+  <div class="sec-head">
+    <div class="kicker">02 · Evolution Strategy</div>
+    <h2>From local prototype to commercial gateway</h2>
+    <p>The Motor ESP32 is upgraded into a Smart Cloud Gateway built around three guarantees.</p>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <h3>Local persistent buffering (fail-safe storage)</h3>
+      <p>Telemetry is written directly to the Motor ESP32's internal non-volatile flash file system. If the home
+         internet or router drops, reports are buffered in local hardware storage so no data is lost.</p>
+    </div>
+    <div class="step">
+      <h3>Asynchronous cloud sync (reporting engine)</h3>
+      <p>When connectivity returns, the gateway packages accumulated logs and batches them to Firebase —
+         providing historical streams to the web panel and updating the mobile app in under 400 ms.</p>
+    </div>
+    <div class="step">
+      <h3>Single-use industrial battery system</h3>
+      <p>Node 1 sits on open roofs with no power sockets. Li-SOCl₂ chemistry + a supercapacitor for pulse loads,
+         plus extreme deep-sleep rules (waking only 4× a day), give 2–3 years with no cords or solar.</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============== END-TO-END FLOW ============== -->
+<section id="flow"><div class="wrap">
+  <div class="sec-head">
+    <div class="kicker">03 · End-to-End Telemetry Flow</div>
+    <h2>How data &amp; commands move</h2>
+    <p>Sensors → local Wi-Fi → gateway (relays, valve, OLED, flash) → Firebase → web &amp; mobile, with override commands flowing back.</p>
+  </div>
+  <div class="diagram">
+    <pre class="mermaid">
+flowchart TD
+    subgraph N1["Node 1 — Tank Unit (Battery, Roof)"]
+        ULTRA["JSN-SR04T<br/>Ultrasonic Level"]
+        TDS["TDS Purity Sensor"]
+        PH["pH Probe"]
+        ESP1["ESP32 + 4G LTE<br/>Deep Sleep x4/day"]
+        ULTRA --> ESP1
+        TDS --> ESP1
+        PH --> ESP1
+    end
+    subgraph N2["Node 2 — Motor Unit (Smart Cloud Gateway)"]
+        ESP2["ESP32 Gateway"]
+        FLASH[("Local Flash<br/>Buffer Logs")]
+        RELAY["Relays<br/>Pump / Cleaning"]
+        SERVO["Servo / Valve Actuator"]
+        OLED2["OLED Console"]
+        BTN2["2 Buttons<br/>4 commands"]
+        ESP2 --> RELAY
+        ESP2 --> SERVO
+        ESP2 --> OLED2
+        BTN2 --> ESP2
+        ESP2 <--> FLASH
+    end
+    ESP1 -->|Local Wi-Fi telemetry| ESP2
+    ESP2 -->|batched, &lt;400ms| FB[("Firebase<br/>Real-Time Cloud")]
+    FB -->|historical streams| WEB["Next.js Web Panel"]
+    FB -->|live push| APP["Flutter Mobile App"]
+    APP -->|override commands| FB
+    FB -->|command relay| ESP2
+    RELAY --> PUMP["Water Pump / Motor"]
+    SERVO --> VALVE["Valve / Cleaning System"]
+    </pre>
+  </div>
+</div></section>
+
+<!-- ============== USER-WISE ============== -->
+<section id="users"><div class="wrap">
+  <div class="sec-head">
+    <div class="kicker">04 · User-Wise View</div>
+    <h2>Who touches the system, and how</h2>
+    <p>On-site users work the physical panel (no internet needed); remote users monitor and override through the apps.</p>
+  </div>
+  <div class="diagram">
+    <pre class="mermaid">
+flowchart TB
+    subgraph FIELD["On-Site Users (Physical)"]
+        OP["Field Operator / Farmer"]
+        TECH["Installer / Technician"]
+    end
+    subgraph REMOTE["Remote Users (Connected)"]
+        HOME["Home / Urban Owner"]
+        ADMIN["Admin / Fleet Manager"]
+    end
+    subgraph SURFACES["Interaction Surfaces"]
+        BTN["Node 2 Push Buttons<br/>4 commands"]
+        OLED["Node 2 OLED Console<br/>read-only status"]
+        MOBILE["Flutter Mobile App"]
+        WEB["Next.js Web Panel"]
+    end
+    CLOUD[("Firebase Cloud")]
+    DEVICE["CREMEN Device<br/>Tank + Motor Nodes"]
+    OP -->|press / hold| BTN
+    OP -->|glance| OLED
+    TECH -->|setup &amp; verify| OLED
+    TECH -->|wire &amp; test| BTN
+    HOME -->|monitor + override| MOBILE
+    ADMIN -->|monitor + CSV reports| WEB
+    BTN --> DEVICE
+    OLED --- DEVICE
+    DEVICE <--> CLOUD
+    CLOUD <--> MOBILE
+    CLOUD <--> WEB
+    </pre>
+  </div>
+  <div class="grid cols-4" style="margin-top:1.25rem">
+    <div class="card"><h3>👷 Field Operator</h3><p>Uses physical buttons + OLED at the panel. Works even with no internet.</p></div>
+    <div class="card"><h3>🔧 Installer</h3><p>Wires nodes, tests relays/valve, confirms OLED readings at commissioning.</p></div>
+    <div class="card"><h3>🏠 Home Owner</h3><p>Monitors live level &amp; purity, sends manual stop/start from the Flutter app.</p></div>
+    <div class="card"><h3>🗂️ Fleet Admin</h3><p>Uses the web panel for telemetry gauges and downloadable CSV reports.</p></div>
+  </div>
+</div></section>
+
+<!-- ============== MODELS ============== -->
+<section id="models"><div class="wrap">
+  <div class="sec-head">
+    <div class="kicker">05 · Product Models</div>
+    <h2>Model A vs Model B</h2>
+    <p>Node 1 (Tank Unit) is identical in both. Only Node 2's control, valve and cleaning strategy differ.</p>
+  </div>
+  <div class="grid cols-2">
+    <div class="card model-a">
+      <h3><span class="ico">🌾</span> Model A — Frugal Retrofit</h3>
+      <p class="pill">Agricultural / Village</p>
+      <ul>
+        <li><b>Motor (Pulse method):</b> two 5 V relays in parallel inside the existing starter box; a 1 s pulse "presses" the Green/Red buttons — no heavy current.</li>
+        <li><b>Valve (Clamp-on):</b> MG996R servo clamps over the manual PVC ball-valve handle, rotating it 90° — no pipe cutting.</li>
+        <li><b>Cleaning (Bottom siphon flush):</b> perforated floor pipe; servo opens valve 45 s, water weight siphons silt out — no pump power, tank not emptied.</li>
+      </ul>
+      <p style="margin-top:.8rem">System total <span class="tot">₹5,050</span></p>
+    </div>
+    <div class="card model-b">
+      <h3><span class="ico">🏙️</span> Model B — Premium Advanced Grid</h3>
+      <p class="pill">Urban Residential</p>
+      <ul>
+        <li><b>Motor (Direct switching):</b> bypasses legacy panels, runs pump AC mains through a 30 A power relay.</li>
+        <li><b>Valve (Inline actuator):</b> commercial 12 V motorized inline valve built into the pipe.</li>
+        <li><b>Cleaning (Closed filter loop):</b> 100 % zero-waste — a 12 V circulation pump runs muddy water through an external sand/mesh/charcoal filter back to the top.</li>
+      </ul>
+      <p style="margin-top:.8rem">System total <span class="tot">₹6,230</span></p>
+    </div>
+  </div>
+</div></section>
+
+<!-- ============== CONFIGURATOR ============== -->
+<section id="builder"><div class="wrap">
+  <div class="sec-head">
+    <div class="kicker">05b · Modular Models &amp; Pricing</div>
+    <h2>Build your own configuration</h2>
+    <p>Every system is assembled from optional blocks. Drop the 4G module on Wi-Fi sites, drop the battery
+       where mains power exists, and fit only motor or only valve control — the price updates live.</p>
+  </div>
+
+  <div class="cfg-presets" id="cfg-presets"><!-- preset buttons injected --></div>
+
+  <div class="cfg-layout">
+    <div id="cfg-controls"><!-- option groups injected --></div>
+    <aside class="price-panel" id="cfg-price"><!-- live price injected --></aside>
+  </div>
+
+  <div id="cfg-summary"><!-- selection chips injected --></div>
+  <div id="cfg-bom"><!-- live component tables injected --></div>
+
+  <div class="note">
+    Prices are computed live by summing the included component blocks (₹ from the spec BOM).
+    The fully-loaded <b>Model A</b> build reproduces the spec's <b>₹5,050</b>; the fully-loaded <b>Model B</b>
+    build computes to <b>₹6,180</b> (the spec headline says ₹6,230 — a ₹50 line-item gap in the source document).
+    Cleaning hardware is bundled with the <b>valve</b> scope, matching the spec's flush/filter design.
+  </div>
+</div></section>
+
+<!-- ============== CONCEPTUAL CIRCUITS ============== -->
+<section id="circuits"><div class="wrap">
+  <div class="sec-head">
+    <div class="kicker">06 · Conceptual Circuit Wiring</div>
+    <h2>What connects to what</h2>
+    <p>Block-level wiring — sensors and actuators around each ESP32. Pin numbers come later in the schematics.</p>
+  </div>
+  <div class="legend">
+    <span><i style="background:#2da8e0"></i> ESP32 (MCU)</span>
+    <span><i style="background:#1fd1c3"></i> Sensor</span>
+    <span><i style="background:#f6b73c"></i> Actuator</span>
+    <span><i style="background:#9a8cff"></i> Comms</span>
+    <span><i style="background:#46d18a"></i> Power</span>
+  </div>
+
+  <!-- Node 1 conceptual -->
+  <h3 style="margin:1.4rem 0 .5rem">Node 1 — Tank Unit</h3>
+  <div class="diagram svg-frame">
+    <svg viewBox="0 0 760 320" role="img" aria-label="Node 1 conceptual wiring">
+      <!-- ESP32 center -->
+      <rect class="box esp" x="300" y="110" width="170" height="100" rx="10"/>
+      <text class="title" x="385" y="150" text-anchor="middle">ESP32-WROOM-32D</text>
+      <text class="sub" x="385" y="170" text-anchor="middle">deep sleep · 4 wakes/day</text>
+      <!-- sensors left -->
+      <rect class="box sensor" x="30" y="40"  width="180" height="48" rx="10"/>
+      <text class="title" x="120" y="60" text-anchor="middle">JSN-SR04T</text>
+      <text class="sub"   x="120" y="76" text-anchor="middle">Ultrasonic level</text>
+      <rect class="box sensor" x="30" y="135" width="180" height="48" rx="10"/>
+      <text class="title" x="120" y="155" text-anchor="middle">TDS Sensor</text>
+      <text class="sub"   x="120" y="171" text-anchor="middle">water purity (PPM)</text>
+      <rect class="box sensor" x="30" y="230" width="180" height="48" rx="10"/>
+      <text class="title" x="120" y="250" text-anchor="middle">pH Probe</text>
+      <text class="sub"   x="120" y="266" text-anchor="middle">acidity / safety</text>
+      <!-- right comms + actuator -->
+      <rect class="box comm" x="560" y="50" width="180" height="48" rx="10"/>
+      <text class="title" x="650" y="70" text-anchor="middle">A7670C 4G LTE</text>
+      <text class="sub"   x="650" y="86" text-anchor="middle">cloud uplink</text>
+      <rect class="box act" x="560" y="220" width="180" height="48" rx="10"/>
+      <text class="title" x="650" y="240" text-anchor="middle">12V Latching Valve</text>
+      <text class="sub"   x="650" y="256" text-anchor="middle">solenoid (pulse)</text>
+      <!-- power -->
+      <rect class="box pwr" x="300" y="250" width="170" height="48" rx="10"/>
+      <text class="title" x="385" y="270" text-anchor="middle">Li-SOCl₂ + Supercap</text>
+      <text class="sub"   x="385" y="286" text-anchor="middle">3.6V · pulse pack</text>
+      <!-- wires -->
+      <path class="wire sig" d="M210 64 L300 130"/>
+      <path class="wire sig" d="M210 159 L300 160"/>
+      <path class="wire sig" d="M210 254 L300 190"/>
+      <path class="wire" d="M470 140 L560 80"/>
+      <path class="wire" d="M470 175 L560 240"/>
+      <path class="wire pwr" d="M385 250 L385 210"/>
+    </svg>
+  </div>
+
+  <!-- Node 2 Model A conceptual -->
+  <h3 style="margin:1.6rem 0 .5rem">Node 2 — Model A (Agricultural Panel)</h3>
+  <div class="diagram svg-frame">
+    <svg viewBox="0 0 760 340" role="img" aria-label="Node 2 Model A conceptual wiring">
+      <rect class="box esp" x="300" y="130" width="170" height="100" rx="10"/>
+      <text class="title" x="385" y="170" text-anchor="middle">ESP32 Gateway</text>
+      <text class="sub" x="385" y="190" text-anchor="middle">+ flash buffer · Wi-Fi</text>
+      <!-- left inputs -->
+      <rect class="box sensor" x="30" y="70"  width="180" height="48" rx="10"/>
+      <text class="title" x="120" y="90" text-anchor="middle">OLED SSD1306</text>
+      <text class="sub" x="120" y="106" text-anchor="middle">0.96" I2C status</text>
+      <rect class="box sensor" x="30" y="240" width="180" height="48" rx="10"/>
+      <text class="title" x="120" y="260" text-anchor="middle">2 Micro-Switches</text>
+      <text class="sub" x="120" y="276" text-anchor="middle">4-command buttons</text>
+      <!-- right actuators -->
+      <rect class="box act" x="560" y="40" width="180" height="48" rx="10"/>
+      <text class="title" x="650" y="60" text-anchor="middle">2-Ch 5V Relay</text>
+      <text class="sub" x="650" y="76" text-anchor="middle">pulse starter buttons</text>
+      <rect class="box act" x="560" y="150" width="180" height="48" rx="10"/>
+      <text class="title" x="650" y="170" text-anchor="middle">MG996R Servo</text>
+      <text class="sub" x="650" y="186" text-anchor="middle">clamp-on valve 90°</text>
+      <rect class="box pwr" x="560" y="260" width="180" height="48" rx="10"/>
+      <text class="title" x="650" y="280" text-anchor="middle">5V 3A Adapter</text>
+      <text class="sub" x="650" y="296" text-anchor="middle">mains supply</text>
+      <!-- wires -->
+      <path class="wire sig" d="M210 94 L300 150"/>
+      <path class="wire sig" d="M210 264 L300 210"/>
+      <path class="wire" d="M470 150 L560 70"/>
+      <path class="wire" d="M470 180 L560 175"/>
+      <path class="wire pwr" d="M560 285 L470 215"/>
+    </svg>
+  </div>
+
+  <!-- Node 2 Model B conceptual -->
+  <h3 style="margin:1.6rem 0 .5rem">Node 2 — Model B (Urban Panel)</h3>
+  <div class="diagram svg-frame">
+    <svg viewBox="0 0 760 380" role="img" aria-label="Node 2 Model B conceptual wiring">
+      <rect class="box esp" x="300" y="150" width="170" height="100" rx="10"/>
+      <text class="title" x="385" y="190" text-anchor="middle">ESP32 Gateway</text>
+      <text class="sub" x="385" y="210" text-anchor="middle">+ flash buffer · Wi-Fi</text>
+      <!-- left inputs -->
+      <rect class="box sensor" x="30" y="90"  width="180" height="48" rx="10"/>
+      <text class="title" x="120" y="110" text-anchor="middle">OLED SSD1306</text>
+      <text class="sub" x="120" y="126" text-anchor="middle">0.96" I2C status</text>
+      <rect class="box sensor" x="30" y="260" width="180" height="48" rx="10"/>
+      <text class="title" x="120" y="280" text-anchor="middle">Ring-LED Buttons</text>
+      <text class="sub" x="120" y="296" text-anchor="middle">4-command metallic</text>
+      <!-- right actuators -->
+      <rect class="box act" x="560" y="30" width="180" height="48" rx="10"/>
+      <text class="title" x="650" y="50" text-anchor="middle">30A Power Relay</text>
+      <text class="sub" x="650" y="66" text-anchor="middle">pump AC mains</text>
+      <rect class="box act" x="560" y="115" width="180" height="48" rx="10"/>
+      <text class="title" x="650" y="135" text-anchor="middle">12V Inline Valve</text>
+      <text class="sub" x="650" y="151" text-anchor="middle">motorized actuator</text>
+      <rect class="box act" x="560" y="200" width="180" height="48" rx="10"/>
+      <text class="title" x="650" y="220" text-anchor="middle">12V Circ. Pump</text>
+      <text class="sub" x="650" y="236" text-anchor="middle">→ filter loop</text>
+      <rect class="box pwr" x="560" y="300" width="180" height="48" rx="10"/>
+      <text class="title" x="650" y="320" text-anchor="middle">5V/12V Dual SMPS</text>
+      <text class="sub" x="650" y="336" text-anchor="middle">dual-rail supply</text>
+      <!-- filter -->
+      <rect class="box" x="300" y="300" width="170" height="48" rx="10"/>
+      <text class="title" x="385" y="320" text-anchor="middle">Acrylic Filter Box</text>
+      <text class="sub" x="385" y="336" text-anchor="middle">sand·mesh·charcoal</text>
+      <!-- wires -->
+      <path class="wire sig" d="M210 114 L300 175"/>
+      <path class="wire sig" d="M210 284 L300 230"/>
+      <path class="wire" d="M470 170 L560 60"/>
+      <path class="wire" d="M470 185 L560 140"/>
+      <path class="wire" d="M470 205 L560 225"/>
+      <path class="wire" d="M560 224 L470 320"/>
+      <path class="wire pwr" d="M560 325 L470 240"/>
+    </svg>
+  </div>
+</div></section>
+
+<!-- ============== PIN-LEVEL SCHEMATICS ============== -->
+<section id="pins"><div class="wrap">
+  <div class="sec-head">
+    <div class="kicker">07 · Pin-Level Schematics</div>
+    <h2>Reference GPIO wiring</h2>
+    <p>Detailed pin mapping for each ESP32. Power rails shown dashed-green, signal lines blue.</p>
+  </div>
+  <div class="note">
+    ⚠️ <b>Reference assignment.</b> The CREMEN spec lists the parts and what they connect to, but not exact
+    GPIO numbers. The pins below are a sensible, buildable proposal — verify against your board revision and
+    free up the strapping/boot pins (GPIO 0, 2, 12, 15) before final layout.
+  </div>
+
+  <!-- Node 1 pins -->
+  <h3 style="margin:1.4rem 0 .5rem">Node 1 — Tank Unit</h3>
+  <div class="diagram svg-frame">
+    <svg viewBox="0 0 760 360" role="img" aria-label="Node 1 pin schematic">
+      <rect class="box esp" x="300" y="60" width="160" height="240" rx="10"/>
+      <text class="title" x="380" y="86" text-anchor="middle">ESP32-WROOM-32D</text>
+      <!-- left peripherals -->
+      <g>
+        <rect class="box sensor" x="20" y="60" width="200" height="42" rx="8"/>
+        <text class="title" x="120" y="86" text-anchor="middle">JSN-SR04T Ultrasonic</text>
+        <path class="wire sig" d="M220 75 L300 100"/><text class="pin" x="232" y="70">TRIG→GPIO5 · ECHO→GPIO18</text>
+        <rect class="box sensor" x="20" y="130" width="200" height="42" rx="8"/>
+        <text class="title" x="120" y="156" text-anchor="middle">TDS Sensor (Analog)</text>
+        <path class="wire sig" d="M220 150 L300 140"/><text class="pin" x="232" y="142">AOUT→GPIO34 (ADC)</text>
+        <rect class="box sensor" x="20" y="200" width="200" height="42" rx="8"/>
+        <text class="title" x="120" y="226" text-anchor="middle">pH Probe (Analog)</text>
+        <path class="wire sig" d="M220 220 L300 180"/><text class="pin" x="232" y="214">PO→GPIO35 (ADC)</text>
+      </g>
+      <!-- right peripherals -->
+      <g>
+        <rect class="box comm" x="540" y="70" width="200" height="42" rx="8"/>
+        <text class="title" x="640" y="96" text-anchor="middle">A7670C 4G LTE</text>
+        <path class="wire sig" d="M460 110 L540 92"/><text class="pin" x="468" y="88">UART TX17/RX16</text>
+        <rect class="box act" x="540" y="160" width="200" height="42" rx="8"/>
+        <text class="title" x="640" y="186" text-anchor="middle">12V Latching Valve</text>
+        <path class="wire sig" d="M460 150 L540 182"/><text class="pin" x="468" y="160">GPIO25/26 ↔ H-bridge</text>
+        <rect class="box pwr" x="540" y="250" width="200" height="42" rx="8"/>
+        <text class="title" x="640" y="276" text-anchor="middle">Li-SOCl₂ + Supercap</text>
+        <path class="wire pwr" d="M460 250 L540 271"/><text class="pin" x="468" y="246">3V3 / GND rails</text>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Node 2 Model A pins -->
+  <h3 style="margin:1.6rem 0 .5rem">Node 2 — Model A (Agricultural)</h3>
+  <div class="diagram svg-frame">
+    <svg viewBox="0 0 760 360" role="img" aria-label="Node 2 Model A pin schematic">
+      <rect class="box esp" x="300" y="60" width="160" height="240" rx="10"/>
+      <text class="title" x="380" y="86" text-anchor="middle">ESP32 Gateway</text>
+      <g>
+        <rect class="box sensor" x="20" y="60" width="200" height="42" rx="8"/>
+        <text class="title" x="120" y="86" text-anchor="middle">OLED SSD1306 (I2C)</text>
+        <path class="wire sig" d="M220 80 L300 100"/><text class="pin" x="232" y="76">SDA→GPIO21 · SCL→GPIO22</text>
+        <rect class="box sensor" x="20" y="135" width="200" height="42" rx="8"/>
+        <text class="title" x="120" y="161" text-anchor="middle">Button 1 / Button 2</text>
+        <path class="wire sig" d="M220 155 L300 145"/><text class="pin" x="232" y="150">GPIO32 / GPIO33 (pull-up)</text>
+      </g>
+      <g>
+        <rect class="box act" x="540" y="70" width="200" height="42" rx="8"/>
+        <text class="title" x="640" y="96" text-anchor="middle">2-Ch 5V Relay</text>
+        <path class="wire sig" d="M460 110 L540 92"/><text class="pin" x="468" y="88">IN1→GPIO13 · IN2→GPIO14</text>
+        <rect class="box act" x="540" y="160" width="200" height="42" rx="8"/>
+        <text class="title" x="640" y="186" text-anchor="middle">MG996R Servo</text>
+        <path class="wire sig" d="M460 150 L540 182"/><text class="pin" x="468" y="160">PWM→GPIO27</text>
+        <rect class="box pwr" x="540" y="250" width="200" height="42" rx="8"/>
+        <text class="title" x="640" y="276" text-anchor="middle">5V 3A Adapter</text>
+        <path class="wire pwr" d="M460 250 L540 271"/><text class="pin" x="468" y="246">5V / GND rails</text>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Node 2 Model B pins -->
+  <h3 style="margin:1.6rem 0 .5rem">Node 2 — Model B (Urban)</h3>
+  <div class="diagram svg-frame">
+    <svg viewBox="0 0 760 380" role="img" aria-label="Node 2 Model B pin schematic">
+      <rect class="box esp" x="300" y="70" width="160" height="250" rx="10"/>
+      <text class="title" x="380" y="96" text-anchor="middle">ESP32 Gateway</text>
+      <g>
+        <rect class="box sensor" x="20" y="70" width="200" height="42" rx="8"/>
+        <text class="title" x="120" y="96" text-anchor="middle">OLED SSD1306 (I2C)</text>
+        <path class="wire sig" d="M220 90 L300 110"/><text class="pin" x="232" y="86">SDA→GPIO21 · SCL→GPIO22</text>
+        <rect class="box sensor" x="20" y="150" width="200" height="42" rx="8"/>
+        <text class="title" x="120" y="176" text-anchor="middle">Ring-LED Buttons ×2</text>
+        <path class="wire sig" d="M220 170 L300 160"/><text class="pin" x="232" y="166">GPIO32 / GPIO33 + LED GPIO4/2</text>
+      </g>
+      <g>
+        <rect class="box act" x="540" y="60" width="200" height="40" rx="8"/>
+        <text class="title" x="640" y="85" text-anchor="middle">30A Power Relay</text>
+        <path class="wire sig" d="M460 110 L540 80"/><text class="pin" x="468" y="78">IN→GPIO13</text>
+        <rect class="box act" x="540" y="135" width="200" height="40" rx="8"/>
+        <text class="title" x="640" y="160" text-anchor="middle">12V Inline Valve</text>
+        <path class="wire sig" d="M460 150 L540 155"/><text class="pin" x="468" y="146">DIR→GPIO14</text>
+        <rect class="box act" x="540" y="210" width="200" height="40" rx="8"/>
+        <text class="title" x="640" y="235" text-anchor="middle">12V Circ. Pump</text>
+        <path class="wire sig" d="M460 200 L540 230"/><text class="pin" x="468" y="206">via 2nd relay→GPIO12</text>
+        <rect class="box pwr" x="540" y="290" width="200" height="40" rx="8"/>
+        <text class="title" x="640" y="315" text-anchor="middle">5V/12V Dual SMPS</text>
+        <path class="wire pwr" d="M460 280 L540 310"/><text class="pin" x="468" y="286">5V·12V·GND rails</text>
+      </g>
+    </svg>
+  </div>
+</div></section>
+
+<!-- ============== OLED UI ============== -->
+<section id="oled"><div class="wrap">
+  <div class="sec-head">
+    <div class="kicker">08 · OLED Console UI</div>
+    <h2>The local 0.96″ status screen</h2>
+    <p>Six lines rendered on the SSD1306: header, tank graph, TDS, pH, conditional status, and the actuator grid.</p>
+  </div>
+  <div class="diagram svg-frame">
+    <svg viewBox="0 0 520 300" role="img" aria-label="OLED screen mockup">
+      <!-- bezel -->
+      <rect x="20" y="20" width="480" height="260" rx="18" fill="#05080b" stroke="#234157" stroke-width="2"/>
+      <!-- screen -->
+      <rect x="44" y="44" width="432" height="212" rx="6" fill="#000810"/>
+      <!-- line 1 header -->
+      <text x="260" y="72" text-anchor="middle" style="fill:#33e0ff;font-family:var(--mono);font-size:15px;font-weight:700;letter-spacing:.06em">--- CREMEN SMART WATER ---</text>
+      <!-- line 2 tank bar -->
+      <text x="60" y="104" style="fill:#9adfff;font-family:var(--mono);font-size:13px">TANK</text>
+      <rect x="112" y="92" width="260" height="16" rx="3" fill="none" stroke="#1fd1c3" stroke-width="1.5"/>
+      <rect x="115" y="95" width="186" height="10" rx="2" fill="#1fd1c3"/>
+      <text x="392" y="104" style="fill:#1fd1c3;font-family:var(--mono);font-size:14px;font-weight:700">72%</text>
+      <!-- line 3 TDS -->
+      <text x="60" y="134" style="fill:#9adfff;font-family:var(--mono);font-size:13px">TDS PURITY</text>
+      <text x="392" y="134" text-anchor="end" style="fill:#33e0ff;font-family:var(--mono);font-size:14px;font-weight:700">318 PPM</text>
+      <!-- line 4 pH -->
+      <text x="60" y="160" style="fill:#9adfff;font-family:var(--mono);font-size:13px">pH LEVEL</text>
+      <text x="392" y="160" text-anchor="end" style="fill:#33e0ff;font-family:var(--mono);font-size:14px;font-weight:700">7.2 OK</text>
+      <!-- line 5 status -->
+      <rect x="60" y="174" width="356" height="26" rx="4" fill="rgba(70,209,138,.12)" stroke="#46d18a"/>
+      <text x="238" y="192" text-anchor="middle" style="fill:#46d18a;font-family:var(--mono);font-size:14px;font-weight:700">STATUS: OPTIMAL</text>
+      <!-- line 6 actuator grid -->
+      <text x="60" y="232" style="fill:#9adfff;font-family:var(--mono);font-size:13px">PUMP:</text>
+      <text x="120" y="232" style="fill:#46d18a;font-family:var(--mono);font-size:13px;font-weight:700">ON</text>
+      <text x="230" y="232" style="fill:#9adfff;font-family:var(--mono);font-size:13px">CLEAN:</text>
+      <text x="300" y="232" style="fill:#f6b73c;font-family:var(--mono);font-size:13px;font-weight:700">READY</text>
+    </svg>
+  </div>
+  <div class="note">Line 5 alternates between <b>STATUS: OPTIMAL</b> and <b>ALERT: MUD!</b> when turbidity is flagged;
+     the actuator grid (line 6) shows Pump <b>ON/OFF</b> and Cleaning <b>ACTIVE/READY</b>.</div>
+</div></section>
+
+<!-- ============== BUTTONS ============== -->
+<section id="buttons"><div class="wrap">
+  <div class="sec-head">
+    <div class="kicker">09 · Manual Override</div>
+    <h2>Two buttons, four commands</h2>
+    <p>Node 2's smart button timing overrides automation instantly.</p>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Button</th><th>Gesture</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="2"><b>1 · Pump Master</b></td><td>Quick single click</td><td>Instant <b>SHUTDOWN</b> pulse — pump OFF</td></tr>
+        <tr><td>Long press (hold 2 s)</td><td>Override sensor rules — force pump <b>ON</b></td></tr>
+        <tr><td rowspan="2"><b>2 · Mud Cleaner Captain</b></td><td>Quick single click</td><td>Cancel / cut off the active cleaning cycle</td></tr>
+        <tr><td>Long press (hold 2 s)</td><td>Override turbidity rules — trigger a <b>45 s flush</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div></section>
+
+<!-- ============== APPS ============== -->
+<section id="apps"><div class="wrap">
+  <div class="sec-head">
+    <div class="kicker">10 · Web &amp; Mobile</div>
+    <h2>Application features</h2>
+    <p>Both surfaces read live and historical data from Firebase.</p>
+  </div>
+  <div class="grid cols-2">
+    <div class="card">
+      <h3><span class="ico">🖥️</span> Next.js Web Panel</h3>
+      <ul>
+        <li><b>Header module:</b> global network identity keys, dynamic sync-status timestamps, connectivity signal lights.</li>
+        <li><b>Telemetry matrix cards:</b> high-contrast gauges &amp; block charts for live level, TDS and pH.</li>
+        <li><b>Reporting engine:</b> aggregates cloud logs into downloadable CSV — monthly motor runtime &amp; sensor health trends.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3><span class="ico">📱</span> Flutter Mobile App</h3>
+      <ul>
+        <li><b>Real-time level gauge:</b> active progress bar + bold % of current fluid level.</li>
+        <li><b>Water purity log card:</b> live hardness metrics &amp; chemical-safety standards.</li>
+        <li><b>Manual ignition override:</b> high-visibility CTA to send emergency motor stop/start over the cloud.</li>
+      </ul>
+    </div>
+  </div>
+</div></section>
+
+
+
+<!-- ============== CLOUD ============== -->
+<section id="cloud"><div class="wrap">
+  <div class="sec-head">
+    <div class="kicker">11 · Cloud &amp; Hosting</div>
+    <h2>Serverless stack — ₹0 / month</h2>
+    <p>The whole dashboard and sync layer stays inside free tiers through prototyping and market validation.</p>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>Service</th><th>Tier / Allocation</th><th class="cost">Cost</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Google Firebase (Real-time DB)</td><td>1 GiB · 50,000 reads + 20,000 writes/day</td><td class="cost">Free</td></tr>
+        <tr><td>2</td><td>Firebase Authentication</td><td>Up to 50,000 Monthly Active Users</td><td class="cost">Free</td></tr>
+        <tr><td>3</td><td>Vercel Core (Next.js host)</td><td>Hobby — global edge CDN</td><td class="cost">Free</td></tr>
+        <tr><td>4</td><td>Domain (GoDaddy / Hostinger)</td><td>Custom branding address</td><td class="cost">~₹600 / yr</td></tr>
+        <tr><td>5</td><td>Google Play Console</td><td>Android publishing authorization</td><td class="cost">~₹2,100 once</td></tr>
+        <tr class="grand"><td colspan="3">Total ongoing software cost</td><td class="cost">₹0 / month</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div></section>
+
+<!-- ============== BOM / PRICING ============== -->
+<section id="bom"><div class="wrap">
+  <div class="sec-head">
+    <div class="kicker">12 · Bill of Materials &amp; Pricing</div>
+    <h2>Every component, costed</h2>
+    <p>Node 1 (Tank Unit) is shared by both models. Node 2 differs by market.</p>
+  </div>
+
+  <div class="table-wrap" style="margin-bottom:1.25rem">
+    <table>
+      <caption>Node 1 — Tank Unit (shared · Model A &amp; B)</caption>
+      <thead><tr><th>Component</th><th>Spec / Role</th><th class="cost">Cost</th></tr></thead>
+      <tbody>
+        <tr><td>ESP32-WROOM-32D Dev Board</td><td>Main MCU; reads sensors, manages deep sleep</td><td class="cost">₹400</td></tr>
+        <tr><td>A7670C 4G LTE Breakout</td><td>Cloud-ready cellular uplink</td><td class="cost">₹1,160</td></tr>
+        <tr><td>ER14505 3.6V Li-SOCl₂ Battery (AA)</td><td>High-density single-use industrial cell</td><td class="cost">₹250</td></tr>
+        <tr><td>SPC1520 Supercapacitor / HLC Pack</td><td>Handles transmit pulse current spikes</td><td class="cost">₹180</td></tr>
+        <tr><td>JSN-SR04T Ultrasonic Sensor</td><td>Waterproof tank level measurement</td><td class="cost">₹450</td></tr>
+        <tr><td>Analog TDS Sensor Module</td><td>Total Dissolved Solids (purity, PPM)</td><td class="cost">₹350</td></tr>
+        <tr><td>Analog pH Probe Assembly Kit</td><td>Water acidity / chemical safety</td><td class="cost">₹300</td></tr>
+        <tr><td>12V DC ½″ Latching Pulse Solenoid Valve</td><td>Low-power latching valve</td><td class="cost">₹650</td></tr>
+        <tr class="subtotal"><td colspan="2">Node 1 subtotal</td><td class="cost">₹3,740</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid cols-2">
+    <div class="table-wrap">
+      <table>
+        <caption>Node 2 — Model A (Agricultural)</caption>
+        <thead><tr><th>Component</th><th class="cost">Cost</th></tr></thead>
+        <tbody>
+          <tr><td>ESP32-WROOM-32D Dev Board</td><td class="cost">₹400</td></tr>
+          <tr><td>0.96″ I2C SSD1306 OLED</td><td class="cost">₹220</td></tr>
+          <tr><td>Rugged Tactile Micro-Switches</td><td class="cost">₹20</td></tr>
+          <tr><td>2-Channel 5V Low-Level Relay</td><td class="cost">₹120</td></tr>
+          <tr><td>MG996R Metal-Gear Servo</td><td class="cost">₹300</td></tr>
+          <tr><td>5V 3A Heavy-Duty Wall Adapter</td><td class="cost">₹250</td></tr>
+          <tr class="subtotal"><td>Node 2 subtotal</td><td class="cost">₹1,310</td></tr>
+          <tr class="grand"><td>Model A system total</td><td class="cost">₹5,050</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <caption>Node 2 — Model B (Urban)</caption>
+        <thead><tr><th>Component</th><th class="cost">Cost</th></tr></thead>
+        <tbody>
+          <tr><td>ESP32-WROOM-32D Dev Board</td><td class="cost">₹400</td></tr>
+          <tr><td>0.96″ I2C SSD1306 OLED</td><td class="cost">₹220</td></tr>
+          <tr><td>Ring-LED Lit Metallic Push Buttons</td><td class="cost">₹120</td></tr>
+          <tr><td>30A High-Power Switching Relay</td><td class="cost">₹250</td></tr>
+          <tr><td>12V Motorized Inline Valve Actuator</td><td class="cost">₹650</td></tr>
+          <tr><td>12V DC Mini Submersible Circ. Pump</td><td class="cost">₹300</td></tr>
+          <tr><td>DIY Layered Acrylic Filter Box Kit</td><td class="cost">₹250</td></tr>
+          <tr><td>5V/12V Dual Output SMPS Board</td><td class="cost">₹250</td></tr>
+          <tr class="subtotal"><td>Node 2 subtotal</td><td class="cost">₹2,490</td></tr>
+          <tr class="grand"><td>Model B system total</td><td class="cost">₹6,230</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="note">
+    ⚠️ <b>Source figure note.</b> The headline subtotal (₹2,490) and Model B total (₹6,230) are taken verbatim
+    from the spec. The eight Model B line items above actually sum to <b>₹2,440</b> — a ₹50 gap in the original
+    document. Numbers shown match the spec; confirm which figure is authoritative before quoting to a customer.
+  </div>
+</div></section>
+
+<section id="content"><div class="wrap">
+  <div class="sec-head">
+    <details>
+  <summary>View README</summary>
+    <div id="markdown-content"></div>
+</details>
+  </div>
+</div></section>
+
+<footer>
+  <div class="wrap">
+    CREMEN Smart Water IoT Ecosystem · <code>.cdcos</code> rev 2026.05.29-FINAL · India — Agricultural &amp; Urban markets.<br/>
+    Generated documentation site · open <code>index.html</code> in any browser · <kbd>Cmd</kbd>+<kbd>P</kbd> to export PDF.
+  </div>
+</footer>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script type="module" src="/diagrams.js"></script>
+<script type="module" src="/configurator.js"></script>
+<script>
+    fetch("/CREMEN-Smart-Water-Documentation.md")
+      .then(res => res.text())
+      .then(md => {
+        document.getElementById("markdown-content").innerHTML =
+          marked.parse(md);
+      });
+  </script>
+</body>
+</html>
