@@ -105,6 +105,7 @@ export async function POST(req: Request) {
 
     return ok({ ingested: count }, 201);
   } catch (err) {
+    console.log(err)
     return handleError(err);
   }
 }

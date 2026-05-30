@@ -59,6 +59,18 @@ export async function POST(req: Request) {
 
     return ok(resumeToDto(resume), 201);
   } catch (err) {
+    console.error(err);
+    if (err instanceof Error) {
+      if (err.message.includes("Could not read any text from the uploaded file")) {
+        return fail(err.message, 400);
+      }
+      if (err.message.includes("Unsupported file type")) {
+        return fail(err.message, 400);
+      }
+      if (err.message.includes("Legacy .doc files")) {
+        return fail(err.message, 400);
+      }
+    }
     return handleError(err);
   }
 }

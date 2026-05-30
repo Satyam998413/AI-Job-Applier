@@ -14,7 +14,11 @@ export async function parseResume(
   mimeType: string,
 ): Promise<ParsedResume> {
   const rawText = await extractText(buffer, fileName, mimeType);
-  if (!rawText) throw new Error("Could not read any text from the uploaded file.");
+  if (!rawText) {
+    throw new Error(
+      "Could not read any text from the uploaded file. Please upload a searchable PDF, DOCX, TXT, MD, HTML, or RTF resume.",
+    );
+  }
 
   const extracted = await extractSkills(userId, rawText);
   return { ...extracted, rawText };
