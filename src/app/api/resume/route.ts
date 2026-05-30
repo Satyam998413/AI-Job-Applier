@@ -48,7 +48,7 @@ export async function POST(req: Request) {
       experienceYears: parsed.experienceYears,
       extractedAt: new Date(),
       isDefault: existing === 0,
-      filePath: stored.relativePath,
+      filePath: stored?.url || null,
       mimeType: file.type || null,
       fileSize: file.size || buffer.byteLength,
     });

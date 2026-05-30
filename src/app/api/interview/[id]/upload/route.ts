@@ -28,7 +28,7 @@ export async function POST(req: Request, { params }: Ctx) {
     const interview = await Interview.findOne({ _id: id, userId: session.userId });
     if (!interview) return fail("Interview not found", 404);
 
-    const stored = await uploadInterviewMedia(id, file.name, file, file.type || "audio/webm");
+    const stored = await uploadInterviewMedia(session.userId,id, file.name, file, file.type || "audio/webm");
     if (!stored) return fail("Media storage is not configured (BLOB_READ_WRITE_TOKEN)", 503);
 
     await Interview.updateOne(

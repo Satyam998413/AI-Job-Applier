@@ -1,56 +1,67 @@
-import { mkdir, writeFile, unlink, readFile } from "fs/promises";
+import { put, del, get } from "@vercel/blob";
 import { randomUUID } from "crypto";
-import path from "path";
-
-/**
- * On-disk store for original resume files. Files live under
- * `<project-root>/uploads/resumes/<userId>/<uuid>.<ext>` — OUTSIDE `public/` so they
- * are NOT directly URL-accessible. The authenticated route handler at
- * `/api/resume/[id]/file` is the only way to read them.
- */
-const ROOT_DIR = path.join(process.cwd(), "uploads", "resumes");
+import { env } from "@/lib/env";
 
 const ALLOWED_EXTENSIONS = new Set([".pdf", ".docx", ".txt", ".md", ".html", ".htm", ".rtf"]);
 
+const CONTENT_TYPE_MAP: Record<string, string> = {
+  ".pdf": "application/pdf",
+  ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ".txt": "text/plain",
+  ".md": "text/markdown",
+  ".html": "text/html",
+  ".htm": "text/html",
+  ".rtf": "application/rtf",
+};
+
 function safeExtension(fileName: string): string {
-  const ext = path.extname(fileName).toLowerCase();
-  if (!ALLOWED_EXTENSIONS.has(ext)) return ".bin";
-  return ext;
+  const ext = fileName.slice(fileName.lastIndexOf(".")).toLowerCase();
+  return ALLOWED_EXTENSIONS.has(ext) ? ext : ".bin";
 }
 
+/**
+ * Upload a resume file to Vercel Blob.
+ * Returns null when no BLOB_READ_WRITE_TOKEN is configured.
+ * Stored at: {userId}/resumes/{uuid}.{ext}
+ */
 export async function saveResumeFile(
   userId: string,
   buffer: Buffer,
   fileName: string,
-): Promise<{ storageKey: string; relativePath: string }> {
-  const dir = path.join(ROOT_DIR, userId);
-  await mkdir(dir, { recursive: true });
-  const id = randomUUID();
+): Promise<{ url: string; storageKey: string } | null> {
+  if (!env.BLOB_READ_WRITE_TOKEN) return null;
+
   const ext = safeExtension(fileName);
-  const storageKey = `${id}${ext}`;
-  const absolutePath = path.join(dir, storageKey);
-  await writeFile(absolutePath, buffer);
-  // Path relative to repo root — what we persist in Resume.filePath.
-  const relativePath = path.relative(process.cwd(), absolutePath);
-  return { storageKey, relativePath };
+  const contentType = CONTENT_TYPE_MAP[ext] ?? "application/octet-stream";
+  const storageKey = `${userId}/resumes/${randomUUID()}${ext}`;
+
+  const result = await put(storageKey, buffer, {
+    access: "public",
+    contentType,
+    token: env.BLOB_READ_WRITE_TOKEN,
+    addRandomSuffix: false,
+  });
+
+  return { url: result.url, storageKey };
 }
 
-export async function readResumeFile(relativePath: string): Promise<Buffer> {
-  // Hard-stop on escapes: the resolved path must still live under ROOT_DIR.
-  const absolute = path.resolve(process.cwd(), relativePath);
-  if (!absolute.startsWith(ROOT_DIR)) {
-    throw new Error("Refusing to read a path outside the uploads directory");
-  }
-  return await readFile(absolute);
+export async function readResumeFile(blobUrl: string): Promise<Buffer> {
+  const response = await fetch(blobUrl);
+  if (!response.ok) throw new Error(`Resume not found: ${blobUrl}`);
+  return Buffer.from(await response.arrayBuffer());
 }
 
-export async function deleteResumeFile(relativePath: string | null | undefined): Promise<void> {
-  if (!relativePath) return;
+/**
+ * Delete a resume file from Vercel Blob by its storage key.
+ * Deletion is best-effort — errors are silently swallowed.
+ */
+export async function deleteResumeFile(storageKey: string | null | undefined): Promise<void> {
+  if (!storageKey) return;
+  if (!storageKey.includes("resumes/")) return;
+
   try {
-    const absolute = path.resolve(process.cwd(), relativePath);
-    if (!absolute.startsWith(ROOT_DIR)) return;
-    await unlink(absolute);
+    await del(storageKey, { token: env.BLOB_READ_WRITE_TOKEN });
   } catch {
-    // File already gone (or never existed) — never propagate; deletion is best-effort.
+    // Already deleted or never existed — never propagate.
   }
 }
