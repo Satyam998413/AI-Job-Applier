@@ -1,0 +1,126 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  min-height: calc(100vh - 12rem);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.title {
+  font-size: var(--font-size-2xl);
+  font-weight: 850;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-lg);
+  margin-top: var(--space-2);
+  max-width: 60ch;
+}
+
+.chatCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  flex: 1;
+  min-height: 480px;
+}
+
+.thread {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 320px;
+  max-height: calc(100vh - 22rem);
+  overflow-y: auto;
+  padding-right: var(--space-1);
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: auto 0;
+}
+
+.starters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.starter {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font: 600 var(--font-size-sm)/1.4 inherit;
+  cursor: pointer;
+  transition:
+    background var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
+}
+
+.starter:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  background: var(--gradient-accent-soft);
+  transform: translateY(-1px);
+}
+
+.starter:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.thinking {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 36px;
+}
+
+.form {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-end;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.textarea {
+  flex: 1;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  font-size: var(--font-size-md);
+  font-family: inherit;
+  line-height: 1.5;
+  resize: none;
+  min-height: 56px;
+  max-height: 200px;
+  transition: border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-mid) var(--ease-out);
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(109, 123, 255, 0.16);
+}

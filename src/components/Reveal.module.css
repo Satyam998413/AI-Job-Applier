@@ -1,0 +1,17 @@
+.reveal {
+  animation-duration: var(--dur-slow);
+  animation-timing-function: var(--ease-out);
+  animation-fill-mode: both;
+}
+
+.up {
+  animation-name: fadeUp;
+}
+
+.in {
+  animation-name: fadeIn;
+}
+
+.scale {
+  animation-name: scaleIn;
+}

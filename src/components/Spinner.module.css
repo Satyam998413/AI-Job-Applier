@@ -1,0 +1,20 @@
+.wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--color-text-muted);
+}
+
+.spinner {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent, var(--color-primary), var(--color-violet));
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 0);
+  mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 0);
+  animation: spin 800ms linear infinite;
+}
+
+.label {
+  font-size: var(--font-size-sm);
+}

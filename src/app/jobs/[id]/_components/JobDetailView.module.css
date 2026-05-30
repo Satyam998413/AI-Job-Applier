@@ -1,0 +1,31 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  font-weight: 600;
+  width: fit-content;
+  transition: gap var(--dur-fast) var(--ease-out);
+}
+
+.back svg {
+  transform: rotate(180deg);
+}
+
+.back:hover {
+  color: var(--color-text);
+  gap: var(--space-3);
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}

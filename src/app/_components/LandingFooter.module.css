@@ -1,0 +1,121 @@
+.footer {
+  margin-top: var(--space-10);
+  padding: var(--space-8) var(--space-5) var(--space-5);
+  border-top: 1px solid var(--color-border);
+  background: linear-gradient(180deg, transparent, rgba(7, 8, 14, 0.5));
+  max-width: 1140px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.top {
+  display: grid;
+  grid-template-columns: 1.4fr 2fr;
+  gap: var(--space-8);
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.tagline {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  max-width: 36ch;
+  line-height: 1.6;
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-6);
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.colTitle {
+  font-size: var(--font-size-xs);
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+
+.colLinks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.link {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  transition: color var(--dur-fast) var(--ease-out), padding-left var(--dur-fast) var(--ease-out);
+}
+
+.link:hover {
+  color: var(--color-text);
+  padding-left: 4px;
+}
+
+.bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-8);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-subtle);
+  font-size: var(--font-size-sm);
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  background: rgba(52, 211, 154, 0.08);
+  border: 1px solid rgba(52, 211, 154, 0.25);
+  color: var(--color-success);
+  font-weight: 600;
+  font-size: var(--font-size-xs);
+}
+
+.statusDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-success);
+  box-shadow: 0 0 10px var(--color-success);
+  animation: pulseGlow 1.6s var(--ease-in-out) infinite;
+}
+
+@media (max-width: 820px) {
+  .top {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+  .cols {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+  }
+}
+
+@media (max-width: 540px) {
+  .cols {
+    grid-template-columns: 1fr 1fr;
+  }
+}

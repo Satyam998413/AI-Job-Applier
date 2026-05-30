@@ -1,0 +1,24 @@
+.wrap {
+  position: relative;
+  isolation: isolate;
+}
+
+.wrap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(
+    var(--spot-size) var(--spot-size) at var(--mx, 50%) var(--my, 50%),
+    var(--spot-color),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity var(--dur-mid) var(--ease-out);
+  z-index: 0;
+}
+
+.wrap:hover::before {
+  opacity: 1;
+}

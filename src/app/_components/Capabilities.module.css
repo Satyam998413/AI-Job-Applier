@@ -1,0 +1,295 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  align-items: center;
+  text-align: center;
+  scroll-margin-top: 100px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border-strong);
+  background: var(--gradient-accent-soft);
+  color: var(--color-text);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.heading {
+  font-size: var(--font-size-2xl);
+  font-weight: 850;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  max-width: 22ch;
+}
+
+.gradient {
+  background: var(--gradient-text-animated);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradientShift 8s linear infinite;
+}
+
+.lede {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-md);
+  max-width: 60ch;
+  margin-bottom: var(--space-5);
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-3);
+  width: 100%;
+  margin-bottom: var(--space-2);
+}
+
+.tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: linear-gradient(180deg, rgba(17, 20, 31, 0.7), rgba(10, 12, 22, 0.7));
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  color: var(--color-text-muted);
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    border-color var(--dur-mid) var(--ease-out),
+    color var(--dur-mid) var(--ease-out),
+    background var(--dur-mid) var(--ease-out);
+  overflow: hidden;
+}
+
+.tab:hover {
+  color: var(--color-text);
+  border-color: var(--color-border-strong);
+  transform: translateY(-2px);
+}
+
+.tab[data-active] {
+  color: var(--color-text);
+  border-color: rgba(109, 123, 255, 0.5);
+  background: linear-gradient(180deg, rgba(109, 123, 255, 0.18), rgba(163, 104, 252, 0.08));
+  box-shadow: var(--glow-soft);
+}
+
+.tab[data-active]::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 0;
+  height: 2px;
+  background: var(--gradient-accent);
+  border-radius: 2px;
+}
+
+.tabIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  transition: color var(--dur-mid) var(--ease-out), background var(--dur-mid) var(--ease-out);
+}
+
+.tab[data-active] .tabIcon {
+  color: var(--color-primary-contrast);
+  background: var(--gradient-accent);
+  border-color: transparent;
+}
+
+.tabText {
+  display: flex;
+  flex-direction: column;
+}
+
+.tabLabel {
+  font-weight: 750;
+  font-size: var(--font-size-sm);
+  color: inherit;
+}
+
+.tabBlurb {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-subtle);
+}
+
+.panel {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-6);
+  width: 100%;
+  padding: var(--space-6);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border-strong);
+  background: var(--gradient-card);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(12px);
+  text-align: left;
+  overflow: hidden;
+}
+
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(40rem 18rem at 0% 0%, rgba(109, 123, 255, 0.18), transparent 60%);
+  pointer-events: none;
+}
+
+.copy {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.kicker {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--color-cyan);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.panelTitle {
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.panelBody {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-md);
+  line-height: 1.65;
+}
+
+.bullets {
+  list-style: none;
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.bullets li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.bullets li svg {
+  color: var(--color-success);
+  flex-shrink: 0;
+}
+
+.terminal {
+  position: relative;
+  align-self: stretch;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: rgba(7, 8, 14, 0.85);
+  box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.termBar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: rgba(17, 20, 31, 0.8);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.termDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-surface-3);
+}
+
+.termDot[data-c="r"] { background: #ff5f57; }
+.termDot[data-c="y"] { background: #febc2e; }
+.termDot[data-c="g"] { background: #28c840; }
+
+.termLabel {
+  margin-left: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-subtle);
+}
+
+.termBody {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.termLine {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  line-height: 1.6;
+  color: var(--color-text-muted);
+  opacity: 0;
+  animation: termType var(--dur-mid) var(--ease-out) forwards;
+}
+
+@keyframes termType {
+  from {
+    opacity: 0;
+    transform: translateX(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 980px) {
+  .tabs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .panel {
+    grid-template-columns: 1fr;
+    padding: var(--space-5);
+  }
+}
+
+@media (max-width: 560px) {
+  .tabs {
+    grid-template-columns: 1fr;
+  }
+  .heading {
+    font-size: var(--font-size-xl);
+  }
+}

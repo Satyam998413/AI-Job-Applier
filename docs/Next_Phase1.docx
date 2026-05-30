@@ -1,0 +1,67 @@
+AI Job Application Agent
+An AI-powered automation platform that helps users discover jobs, analyze job descriptions, generate ATS-friendly resumes, apply automatically or semi-automatically, and track applications.
+Overview
+Automates repetitive job application workflows.
+Uses AI, browser automation, and resume intelligence.
+Supports scalable and modular architecture.
+Main Goals
+Automatically discover jobs.
+Match jobs with user skills.
+Generate customized resumes.
+Track interview and application progress.
+High-Level Architecture
+Frontend Dashboard (Next.js)
+API Gateway (Node.js + Express)
+Job Scraper Service
+AI Matching Engine
+Resume Engine
+Application Automation Engine
+Tracking & Analytics Dashboard
+Core Modules
+Authentication Module
+User Profile Module
+Resume Parsing Module
+Job Scraper Engine
+AI Matching Engine
+Resume Customization Engine
+Application Automation Engine
+Notification System
+Analytics Dashboard
+Automation Workflow
+User uploads resume
+AI extracts skills
+Job scraper collects jobs
+AI calculates match score
+Resume is customized
+Browser agent applies automatically
+Dashboard tracks results
+Recommended Technology Stack
+Frontend: Next.js, Tailwind CSS
+Backend: Node.js, Express.js, TypeScript
+Automation: Playwright, browser-use
+AI: Ollama, OpenAI, Claude
+Database: MongoDB / PostgreSQL
+Queue: Redis + BullMQ
+Security Considerations
+Encrypt user resumes and credentials.
+Use JWT and refresh tokens.
+Avoid aggressive automation.
+Implement rate limiting and retry logic.
+Folder Structure
+apps/frontend
+apps/backend
+services/scraper-service
+services/ai-service
+services/apply-service
+shared/utils
+docs
+docker
+MVP Roadmap
+Phase 1: Resume upload + job scraping
+Phase 2: Resume customization
+Phase 3: Semi-automatic applications
+Phase 4: AI multi-agent workflows
+Conclusion
+The platform acts as a personal AI career assistant.
+It improves ATS optimization and automates repetitive workflows.
+A semi-automatic workflow is recommended for safer production usage.

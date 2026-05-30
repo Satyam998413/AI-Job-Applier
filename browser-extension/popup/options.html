@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>AI Job Applier — Options</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header class="head">
+      <span class="mark">✨</span>
+      <span class="brand"><span class="brand-accent">AI</span> Job Applier — Options</span>
+    </header>
+    <section class="config" style="border-top: 0; padding-top: 0">
+      <label for="apiUrl">App URL</label>
+      <div class="config-row">
+        <input id="apiUrl" type="url" placeholder="http://localhost:3000" />
+        <button id="saveApiUrl" class="primary">Save</button>
+      </div>
+    </section>
+    <p class="footer">Set to your deployed app's HTTPS URL when not running locally.</p>
+    <script src="popup.js"></script>
+  </body>
+</html>

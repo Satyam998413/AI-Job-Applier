@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "AI Job Applier — Auto-fill",
+  "short_name": "AI Job Applier",
+  "version": "0.1.0",
+  "description": "Suggest and auto-fill answers on job application pages using your AI Job Applier library.",
+  "permissions": ["activeTab", "storage", "scripting"],
+  "host_permissions": [
+    "http://localhost:3000/*",
+    "https://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*/*", "http://localhost/*"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "AI Job Applier"
+  },
+  "options_ui": {
+    "page": "popup/options.html",
+    "open_in_tab": false
+  }
+}

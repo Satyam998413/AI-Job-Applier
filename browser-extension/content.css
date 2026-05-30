@@ -1,0 +1,42 @@
+.aja-suggest-wrapper {
+  display: inline-flex;
+  margin-left: 8px;
+  vertical-align: top;
+}
+
+.aja-suggest-btn {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  margin-top: 6px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #6d7bff, #a368fc);
+  color: #ffffff !important;
+  font: 600 12px/1 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(109, 123, 255, 0.35);
+  transition: transform 120ms ease, box-shadow 200ms ease, opacity 120ms ease;
+}
+
+.aja-suggest-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(109, 123, 255, 0.45);
+}
+
+.aja-suggest-btn:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.aja-suggest-btn[data-state="ok"] {
+  background: linear-gradient(135deg, #34d39a, #5ee5b0);
+  box-shadow: 0 4px 12px rgba(52, 211, 154, 0.35);
+}
+
+.aja-suggest-btn[data-state="err"] {
+  background: linear-gradient(135deg, #fc6d6d, #ff8585);
+  box-shadow: 0 4px 12px rgba(252, 109, 109, 0.35);
+}

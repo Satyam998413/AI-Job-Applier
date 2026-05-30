@@ -1,0 +1,18 @@
+.msg {
+  font-size: var(--font-size-sm);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  animation: fadeUp var(--dur-mid) var(--ease-out) both;
+}
+
+.error {
+  color: var(--color-danger);
+  background: rgba(252, 109, 109, 0.1);
+  border-color: rgba(252, 109, 109, 0.3);
+}
+
+.info {
+  color: var(--color-text-muted);
+  background: var(--color-surface-2);
+}

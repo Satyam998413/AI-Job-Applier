@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Job Applier</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header class="head">
+      <span class="mark">✨</span>
+      <span class="brand"><span class="brand-accent">AI</span> Job Applier</span>
+    </header>
+
+    <section id="status" class="status">
+      <span class="status-dot" data-state="idle"></span>
+      <span class="status-text">Checking…</span>
+    </section>
+
+    <section class="detected">
+      <span class="count" id="count">0</span>
+      <span class="count-label">questions detected on this page</span>
+    </section>
+
+    <section class="actions">
+      <button id="fillAll" class="primary" disabled>Suggest all answers</button>
+      <button id="openApp" class="secondary">Open app</button>
+    </section>
+
+    <section class="config">
+      <label for="apiUrl">App URL</label>
+      <div class="config-row">
+        <input id="apiUrl" type="url" placeholder="http://localhost:3000" />
+        <button id="saveApiUrl" class="ghost">Save</button>
+      </div>
+    </section>
+
+    <footer class="footer">
+      Cookie-authenticated. Log in to the app in this browser first.
+    </footer>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

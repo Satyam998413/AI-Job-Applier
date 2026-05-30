@@ -1,0 +1,533 @@
+# 🚀 Auto Apply + AI Interview System — Step Wise Tasks
+
+## 1. Settings Page Development
+
+### 1.1 Create Settings Module
+
+* Create `/settings` page
+* Add sidebar navigation
+* Add tabs:
+
+  * General
+  * Auto Apply
+  * Resume
+  * AI Interview
+  * Email Templates
+  * Cron Logs
+
+---
+
+## 2. Auto Apply Settings Section
+
+### 2.1 Enable / Disable Auto Apply
+
+* Add toggle:
+
+  * `Enable Auto Apply`
+
+### 2.2 Jobs Posted Date Filter
+
+* Add dropdown:
+
+  * Last 24 Hours
+  * Last 2 Days
+  * Last 1 Week
+  * Last 1 Month
+
+### 2.3 Daily Apply Limits
+
+* Add input:
+
+  * Maximum jobs per day
+* Example:
+
+  * 10
+  * 25
+  * 50
+  * 100
+
+### 2.4 Keywords Filters
+
+* Add include keywords:
+
+  * Node.js
+  * React
+  * Backend
+  * Remote
+
+### 2.5 Exclude Keywords
+
+* Add exclude keywords:
+
+  * Senior
+  * 10 years
+  * Onsite
+
+### 2.6 Experience Filter
+
+* Add:
+
+  * Fresher
+  * 1-3 Years
+  * 3-5 Years
+
+### 2.7 Location Filter
+
+* Add:
+
+  * Remote
+  * India
+  * USA
+  * Hybrid
+
+### 2.8 Salary Filter
+
+* Add minimum salary filter
+
+### 2.9 Save Settings
+
+* Store all filters in database
+
+---
+
+# 3. Database Tasks
+
+## 3.1 Create Users Settings Collection/Table
+
+Fields:
+
+* userId
+* autoApplyEnabled
+* applyLimit
+* dateFilter
+* includeKeywords
+* excludeKeywords
+* locations
+* experience
+* salary
+* createdAt
+* updatedAt
+
+---
+
+## 4. Resume Management
+
+### 4.1 Resume Upload
+
+* Upload PDF/DOCX
+* Save in storage
+
+### 4.2 Resume Parsing
+
+* Extract:
+
+  * Name
+  * Skills
+  * Experience
+  * Email
+  * Phone
+
+### 4.3 Resume Versioning
+
+* Allow multiple resumes
+* Set default resume
+
+---
+
+# 5. Vercel Cron Job Setup
+
+## 5.1 Create Daily Cron Job
+
+* Run every day automatically
+
+Example:
+
+* 9 AM → Fetch jobs
+* 10 PM → Save logs/report
+
+---
+
+## 6. Jobs Fetching System
+
+### 6.1 Integrate Job APIs
+
+Possible sources:
+
+* JSearch API
+* Adzuna
+* RapidAPI Jobs
+* LinkedIn scraping
+* Indeed scraping
+
+### 6.2 Fetch Jobs Daily
+
+* According to saved filters
+
+### 6.3 Deduplicate Jobs
+
+* Remove duplicate jobs
+
+### 6.4 Check Already Applied Jobs
+
+* Compare:
+
+  * Job URL
+  * Company
+  * Email
+  * Position
+
+### 6.5 Save New Jobs Only
+
+---
+
+# 7. HR Email Detection System
+
+## 7.1 Extract HR Emails
+
+* Parse:
+
+  * description
+  * footer
+  * company website
+
+### 7.2 Regex Email Detection
+
+Detect:
+
+* hr@
+* careers@
+* jobs@
+* recruiter@
+
+---
+
+# 8. AI Email Generator
+
+## 8.1 Generate Dynamic Email
+
+Input:
+
+* Job title
+* Company
+* Skills
+* Resume
+
+Output:
+
+* Personalized email
+
+### 8.2 Attach Resume Automatically
+
+### 8.3 Send Email
+
+Using:
+
+* Nylas
+* Gmail API
+* SMTP
+
+### 8.4 Save Email Logs
+
+---
+
+# 9. Auto Apply Form Filling
+
+## 9.1 Browser Automation
+
+Using:
+
+* Playwright
+* Puppeteer
+
+### 9.2 Detect Apply Forms
+
+### 9.3 Autofill Details
+
+* Name
+* Email
+* Phone
+* Experience
+* Resume
+
+### 9.4 Submit Application
+
+### 9.5 Save Apply Status
+
+---
+
+# 10. Applied Jobs Database
+
+## 10.1 Create Applied Jobs Table
+
+Fields:
+
+* userId
+* jobId
+* company
+* position
+* applyMethod
+* emailSent
+* appliedAt
+* status
+
+---
+
+# 11. Prevent Duplicate Applications
+
+## 11.1 Daily Filter System
+
+Next day:
+
+* Skip already applied jobs
+
+### 11.2 Match by:
+
+* URL
+* Company
+* Email
+* Position
+
+---
+
+# 12. AI Interview Page
+
+## 12.1 Create Public Interview Page
+
+Route example:
+
+* `/interview/:id`
+
+### 12.2 Add AI Interview Features
+
+* AI voice questions
+* Camera support
+* Microphone support
+* Live coding
+* Timer
+
+### 12.3 Save Interview Sessions
+
+### 12.4 AI Feedback
+
+* Communication score
+* Technical score
+* Confidence score
+
+---
+
+# 13. Share Interview URLs
+
+## 13.1 Generate Public Live URL
+
+Example:
+
+* `yourapp.com/interview/abc123`
+
+### 13.2 Attach URL in Job Emails
+
+Example Email:
+
+* Resume attached
+* Interview profile link included
+
+---
+
+# 14. AI Interview Database
+
+## 14.1 Store:
+
+* Video
+* Audio
+* Answers
+* Scores
+* Reports
+
+---
+
+# 15. Admin Logs & Monitoring
+
+## 15.1 Cron Logs Page
+
+Show:
+
+* Jobs fetched
+* Emails sent
+* Auto applies completed
+* Failed applies
+
+### 15.2 Error Monitoring
+
+* Sentry
+* LogRocket
+
+---
+
+# 16. Notifications System
+
+## 16.1 Send Notifications
+
+* Email
+* Push
+* In-App
+
+Events:
+
+* Job applied
+* Email sent
+* Apply failed
+* Daily report
+
+---
+
+# 17. Daily Reports
+
+## 17.1 Night Summary
+
+Send:
+
+* Total jobs fetched
+* Total applied
+* Emails sent
+* Failed jobs
+
+---
+
+# 18. Security Tasks
+
+## 18.1 Encrypt:
+
+* API keys
+* Resume files
+* Tokens
+
+### 18.2 Add Rate Limiting
+
+### 18.3 CAPTCHA Protection
+
+---
+
+# 19. AI Features
+
+## 19.1 AI Answer Generator
+
+Generate:
+
+* Job answers
+* Cover letters
+* HR replies
+
+### 19.2 Common Questions Storage
+
+* Save repeated questions
+* Reuse previous answers
+
+---
+
+# 20. Future Advanced Features
+
+## 20.1 Multi Resume AI Selection
+
+* Use best resume per job
+
+### 20.2 AI Job Matching Score
+
+### 20.3 AI Salary Prediction
+
+### 20.4 AI Resume Optimization
+
+### 20.5 AI Mock Interview Practice
+
+---
+
+# 21. Recommended Tech Stack
+
+## Frontend
+
+* Next.js
+* TypeScript
+* Tailwind CSS
+* Zustand
+
+## Backend
+
+* Node.js
+* Express.js
+* MongoDB/PostgreSQL
+
+## Automation
+
+* Playwright
+
+## AI
+
+* OpenAI
+* Gemini
+* Claude
+
+## Email
+
+* Nylas
+
+## Cron
+
+* Vercel Cron Jobs
+
+## Storage
+
+* AWS S3
+* Cloudinary
+
+## Authentication
+
+* Clerk
+* NextAuth
+
+---
+
+# 22. Main Flow
+
+## User Flow
+
+1. User signup
+2. Upload resume
+3. Save filters
+4. Enable auto apply
+5. Cron runs daily
+6. Jobs fetched
+7. Check already applied jobs
+8. Extract HR emails
+9. Generate AI email
+10. Attach resume
+11. Send email OR auto apply
+12. Save applied job
+13. Send report
+14. Include AI interview URL in email
+
+---
+
+# 23. Priority Order
+
+## Phase 1
+
+* Settings page
+* Resume upload
+* Job fetching
+* Cron job
+
+## Phase 2
+
+* Email sending
+* Auto apply
+* Duplicate detection
+
+## Phase 3
+
+* AI interview system
+* AI reports
+* Live URLs
+
+## Phase 4
+
+* AI optimization
+* Advanced analytics
+* Scaling

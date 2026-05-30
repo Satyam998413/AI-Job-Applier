@@ -1,0 +1,58 @@
+.page {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5);
+  overflow: hidden;
+}
+
+.glow {
+  position: absolute;
+  top: -20%;
+  left: 50%;
+  width: 40rem;
+  height: 40rem;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, rgba(109, 123, 255, 0.22), transparent 60%);
+  filter: blur(40px);
+  animation: float 9s var(--ease-in-out) infinite;
+  pointer-events: none;
+}
+
+.inner {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.brand {
+  color: var(--color-text);
+}
+
+.card {
+  width: 100%;
+}
+
+.title {
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-2);
+}
+
+.subtitle {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-5);
+}
+
+.footer {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}

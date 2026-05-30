@@ -1,0 +1,134 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.title {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+}
+
+.subtitle {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  margin-top: var(--space-1);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.sectionLabel {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--color-text-muted);
+  letter-spacing: -0.01em;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.breakdown {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4) var(--space-5);
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.rowHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.rowLabel {
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+}
+
+.rowScore {
+  font-weight: 800;
+  font-size: var(--font-size-md);
+  letter-spacing: -0.02em;
+  min-width: 2.5ch;
+  text-align: right;
+}
+
+.rowScore.success {
+  color: var(--color-success);
+}
+
+.rowScore.warning {
+  color: var(--color-warning);
+}
+
+.rowScore.danger {
+  color: var(--color-danger);
+}
+
+.barTrack {
+  height: 6px;
+  background: var(--color-surface-2);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  border-radius: inherit;
+  transition: width var(--dur-slow) var(--ease-out);
+}
+
+.barFill.success {
+  background: linear-gradient(90deg, var(--color-success), #5ee5b0);
+}
+
+.barFill.warning {
+  background: linear-gradient(90deg, var(--color-warning), #ffd47a);
+}
+
+.barFill.danger {
+  background: linear-gradient(90deg, var(--color-danger), #ff9090);
+}
+
+.comment {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.55;
+}
+
+.bullets {
+  list-style: disc;
+  padding-left: var(--space-5);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+}
+
+@media (max-width: 720px) {
+  .breakdown {
+    grid-template-columns: 1fr;
+  }
+}

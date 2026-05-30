@@ -1,0 +1,37 @@
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-md);
+  background: var(--gradient-accent);
+  color: #fff;
+  box-shadow: var(--glow-primary);
+  flex-shrink: 0;
+  transition: transform var(--dur-mid) var(--ease-spring);
+}
+
+.logo:hover .mark {
+  transform: rotate(-8deg) scale(1.05);
+}
+
+.word {
+  font-weight: 800;
+  font-size: var(--font-size-md);
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+
+.accent {
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

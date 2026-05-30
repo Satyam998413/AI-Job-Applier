@@ -1,0 +1,34 @@
+.ring {
+  position: relative;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: conic-gradient(var(--ring-color) var(--aja-deg), var(--color-surface-2) 0deg);
+  animation: ringFill 1.1s var(--ease-out) both;
+}
+
+.ring::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 18px -2px var(--ring-color);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.inner {
+  position: relative;
+  width: 74%;
+  height: 74%;
+  border-radius: 50%;
+  background: var(--color-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: var(--font-size-md);
+  z-index: 1;
+}

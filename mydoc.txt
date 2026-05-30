@@ -1,0 +1,44 @@
+Step 1 : - What is the feature
+	a :- Hire level description
+
+Step 2 :- How many pages
+	a :- list of pages with description ( Login : ‘Lgoin with Nylas’ )
+
+Step 3:- User Journey ( Connections between pages )…?
+	a :- Nonech Mermaid diagram for non technical end user who actually going to use application
+
+Step 4 :- Database schema identify ( New Table how many if existing table then what’s the change )
+	a :- How many tables we need to create new one
+	b :- Modification in existiong table
+	c :- Also mention indexing , foreign key all required constraints
+Step 5 : Middleware Identification
+	a :- List of existiing middleware that e need to create to achieve the functionalities
+	b :- Existing midddleware if anything change or reuse
+
+Step 6 :- How many routes and what is functionalities
+	
+	a :- list of routes segregae by public and protected
+			example for auth :- POST :- auth/ link with login
+							GET :- user/ link with my-profile
+							PATCH:- user/ link update-profile
+							DELETE:- user/ link delete-profile
+		(Imp Notes :- If protected mention middleware name )
+
+Step 6 :- How many components are old and reused and how many new components
+	a :- List of existiingcomponents that e need to create to achieve the functionalities
+	b :- Existingcomponents if anything change or reuse if modification then what to do change
+Step 7 :- Identify 3rd party integration ( Nylas , Suppose , Gmail , AI )
+	a :- List of tools with use case
+			example :- ###Nylas 
+					-Email Authentication
+                                 -Get latest 25 Emails…
+
+
+
+Step 8 :- End to End mermaid diagram ( Flowchart or Process )
+	a :- Need all operaions conditions middlewares button clicks form fillip
+Step 9 :- Every api controllers and conditions 
+	a :- List of controllers
+		Example :- ### sign
+				1 : Nylas 3rd party api calls and get customer details
+				2 : Create in user_temp

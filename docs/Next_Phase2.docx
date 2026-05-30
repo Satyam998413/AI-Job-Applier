@@ -1,0 +1,502 @@
+# 🚀 AI Job Automation Platform — Full Task & Feature List
+
+# Task 1 — Signup Flow using Nylas + Google
+
+## Features
+
+* Signup using Google via Nylas
+* Store Nylas User ID
+* Store Grant ID
+* Auto-fill:
+
+  * Full Name
+  * Email
+* User manually fills:
+
+  * Phone Number
+  * New Password
+  * Confirm Password
+* Validate password match
+* Save user data in database
+
+---
+
+# Task 2 — Login System
+
+## Login Methods
+
+* Email + Password
+* Mobile Number + Password
+* Google Login via Nylas
+
+## Backend Features
+
+* JWT Authentication
+* Refresh Token System
+* Session Management
+* Secure Login Validation
+
+---
+
+# Task 3 — Settings Page
+
+## Profile Settings
+
+* Update Name
+* Update Email
+* Update Mobile Number
+* Change Password
+
+## Nylas Email Connection
+
+* Show Connected/Disconnected Status
+* Connect Gmail
+* Connect Outlook
+* Reconnect Account
+* Disconnect Email
+
+## Store
+
+* Grant ID
+* Provider
+* Sync Status
+* Connected Time
+
+---
+
+# Task 4 — AI Agent API Key Management
+
+## Features
+
+* Add AI API Key
+* Edit AI API Key
+* Delete AI API Key
+* Activate/Deactivate AI Provider
+
+## Supported Providers
+
+* Gemini
+* OpenAI
+* Claude
+* Groq
+* Ollama (Optional)
+
+## Security
+
+* Encrypt API Keys
+* Backend-only Access
+* User-wise AI Configuration
+
+---
+
+# Task 5 — Connected Job Platforms
+
+## Platforms
+
+* LinkedIn
+* Naukri
+* We Work Remotely
+* Remote OK
+* Indeed
+* Workable
+
+## Features
+
+* Connect Accounts
+* Store Session/Auth Tokens
+* Sync Jobs Automatically
+* Fetch Job Details
+
+## Fetch Job Data
+
+* Job Title
+* Company
+* Salary
+* Skills
+* Location
+* Remote/Hybrid/Onsite
+* Apply Link
+
+---
+
+# Task 6 — Job Filters System
+
+## Basic Filters
+
+* Job Title
+* Company
+* Location
+* Remote
+* Hybrid
+* Onsite
+
+## Advanced Filters
+
+* Salary Range
+* Experience Level
+* Skills
+* Employment Type
+* Date Posted
+* Easy Apply
+
+## Sorting
+
+* Latest Jobs
+* Best Match
+* Highest Salary
+
+---
+
+# Task 7 — AI Email Generator using Nylas
+
+## Features
+
+* Select Job
+* Fetch Job Description
+* Generate AI Email
+* Generate Subject Line
+* Generate Cover Letter Paragraph
+* Edit Generated Email
+
+## Email Features
+
+* Recipient Email Input
+* CC/BCC
+* Attach Resume
+* Send Email using Nylas
+
+---
+
+# Task 8 — Email Testing Page
+
+## Features
+
+* Enter Test Email
+* Send Sample Email
+* Check Delivery Status
+* Success/Failure Logs
+
+---
+
+# Task 9 — JSearch API Integration
+
+## Features
+
+* Every User Adds Own JSearch API Key
+* User-wise API Usage
+* Increase Total Limits Per User
+* Request Tracking System
+
+## API Key Management
+
+* Add API Key
+* Edit API Key
+* Delete API Key
+* Activate/Deactivate Key
+
+## Usage Dashboard
+
+* Total Requests
+* Used Requests
+* Remaining Requests
+* Daily Usage
+* Monthly Usage
+* Last API Call Time
+
+## Security
+
+* Encrypt API Keys
+* Backend Proxy Requests
+* Rate Limiting
+* Abuse Protection
+
+---
+
+# Task 10 — Smart Questions & Auto Answer System
+
+## Goal
+
+* Detect repeated job questions
+* Auto-fill saved answers
+* Automate applications
+
+## Common Questions
+
+* Tell me about yourself
+* Why should we hire you?
+* Expected salary
+* Notice period
+* Relocation
+* Sponsorship
+* Experience Questions
+
+## Features
+
+* Save Questions
+* Save Answers
+* AI Generated Answers
+* Reuse Previous Answers
+* Normalize Similar Questions
+* Auto-fill Repeated Questions
+
+---
+
+# Task 11 — AI Resume-Based Answers
+
+## AI Uses
+
+* Resume Parsing
+* Job Description Analysis
+* Skill Matching
+* Personalized Answer Generation
+
+## Example
+
+Question:
+Why are you fit for this role?
+
+AI generates personalized response automatically.
+
+---
+
+# Task 12 — Auto Apply System
+
+## Workflow
+
+1. Fetch Jobs
+2. Open Apply Form
+3. Extract Questions
+4. Match Stored Answers
+5. Generate Missing Answers
+6. Auto-fill Forms
+7. Upload Resume
+8. Submit Applications
+9. Save Logs
+
+---
+
+# Task 13 — Smart Learning System
+
+## Features
+
+* Learn from previous applications
+* Save new questions
+* Save successful answers
+* Improve future automation
+
+## Confidence Levels
+
+* 95%+ → Auto Submit
+* 70–95% → Review Suggested
+* Below 70% → Manual Review
+
+---
+
+# Task 14 — Admin Dashboard
+
+## Features
+
+* Total Users
+* Active API Keys
+* API Usage Monitoring
+* Failed Requests
+* Suspicious Activity Detection
+* Connected Platforms Analytics
+
+---
+
+# Task 15 — Backend Architecture
+
+## Modules
+
+### Auth Module
+
+* Signup
+* Login
+* JWT
+* Password Reset
+
+### Nylas Module
+
+* OAuth
+* Email Sync
+* Email Send
+* Grant Management
+
+### AI Module
+
+* AI Providers
+* Prompt Engine
+* Email Generator
+* Answer Generator
+
+### Jobs Module
+
+* Job Fetching
+* Filters
+* Job Storage
+
+### Automation Module
+
+* Auto-fill
+* Auto Apply
+* Form Detection
+
+### Settings Module
+
+* User Settings
+* API Keys
+* Connected Accounts
+
+---
+
+# Task 16 — Frontend Architecture
+
+## Pages
+
+* Login
+* Signup
+* Dashboard
+* Settings
+* Connected Accounts
+* Job Search
+* Job Details
+* AI Email Composer
+* Saved Answers
+* API Usage Dashboard
+* Auto Apply Dashboard
+
+## Components
+
+* Navbar
+* Sidebar
+* Job Cards
+* Filters
+* AI Suggestions Panel
+* Usage Cards
+* Status Badges
+
+---
+
+# Task 17 — Suggested Tech Stack
+
+## Frontend
+
+* Next.js
+* TypeScript
+* Redux Toolkit
+* Tailwind CSS
+
+## Backend
+
+* Node.js
+* Express.js
+
+## Database
+
+* PostgreSQL
+* MongoDB
+
+## Authentication
+
+* JWT
+* Nylas OAuth
+
+## AI
+
+* Gemini API
+* OpenAI API
+
+## Queue/Scheduler
+
+* BullMQ
+* Redis
+* Cron Jobs
+
+## File Storage
+
+* AWS S3
+* Cloudinary
+
+---
+
+# Task 18 — Suggested Database Tables
+
+## Users
+
+* id
+* name
+* email
+* mobile
+* password
+* nylas_user_id
+
+## Connected Emails
+
+* user_id
+* grant_id
+* provider
+* status
+
+## AI Providers
+
+* user_id
+* provider
+* encrypted_api_key
+
+## Jobs
+
+* title
+* company
+* location
+* salary
+* apply_url
+
+## Connected Platforms
+
+* user_id
+* platform_name
+* token
+* sync_status
+
+## Email Logs
+
+* sender
+* receiver
+* subject
+* status
+
+## Questions
+
+* question
+* normalized_question
+* category
+
+## Answers
+
+* question_id
+* answer
+* usage_count
+
+## JSearch Usage
+
+* total_limit
+* used_requests
+* remaining_requests
+
+---
+
+# Task 19 — Future Enhancements
+
+* AI Resume Optimization
+* AI Cover Letter Generator
+* AI Interview Preparation
+* Browser Extension Auto-fill
+* ATS Score Checker
+* Multi-language Applications
+* Smart API Rotation
+* Real-time Notifications
+* Duplicate Job Detection
+* AI Career Assistant
+* Analytics Dashboard
+* Application Success Tracking

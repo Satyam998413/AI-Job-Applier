@@ -1,0 +1,156 @@
+.card {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  overflow: hidden;
+  transition:
+    transform var(--dur-mid) var(--ease-out),
+    border-color var(--dur-mid) var(--ease-out),
+    box-shadow var(--dur-mid) var(--ease-out);
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-lg);
+}
+
+.glow {
+  position: absolute;
+  inset: -40% -10% auto -10%;
+  height: 80%;
+  background: radial-gradient(50% 60% at 50% 0%, var(--accent-glow), transparent 70%);
+  opacity: 0;
+  transition: opacity var(--dur-slow) var(--ease-out);
+  pointer-events: none;
+}
+
+.card:hover .glow {
+  opacity: 1;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 1;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-border);
+  color: var(--accent-color);
+  transition: transform var(--dur-mid) var(--ease-spring);
+}
+
+.card:hover .icon {
+  transform: rotate(-6deg) scale(1.08);
+}
+
+.tag {
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--color-text-subtle);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.title {
+  position: relative;
+  z-index: 1;
+  font-size: var(--font-size-lg);
+  font-weight: 750;
+  letter-spacing: -0.02em;
+}
+
+.body {
+  position: relative;
+  z-index: 1;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.65;
+  flex: 1;
+}
+
+.arrow {
+  position: relative;
+  z-index: 1;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-text-subtle);
+  border: 1px solid var(--color-border);
+  transition:
+    transform var(--dur-mid) var(--ease-spring),
+    color var(--dur-mid) var(--ease-out),
+    background var(--dur-mid) var(--ease-out),
+    border-color var(--dur-mid) var(--ease-out);
+}
+
+.card:hover .arrow {
+  transform: translateX(6px);
+  color: var(--accent-color);
+  background: var(--accent-soft);
+  border-color: var(--accent-border);
+}
+
+/* Accent color variables per variant */
+.primary {
+  --accent-color: var(--color-primary);
+  --accent-soft: rgba(109, 123, 255, 0.14);
+  --accent-border: rgba(109, 123, 255, 0.35);
+  --accent-glow: rgba(109, 123, 255, 0.22);
+}
+
+.violet {
+  --accent-color: var(--color-violet);
+  --accent-soft: rgba(163, 104, 252, 0.14);
+  --accent-border: rgba(163, 104, 252, 0.35);
+  --accent-glow: rgba(163, 104, 252, 0.22);
+}
+
+.cyan {
+  --accent-color: var(--color-cyan);
+  --accent-soft: rgba(56, 224, 216, 0.14);
+  --accent-border: rgba(56, 224, 216, 0.35);
+  --accent-glow: rgba(56, 224, 216, 0.18);
+}
+
+.success {
+  --accent-color: var(--color-success);
+  --accent-soft: rgba(52, 211, 154, 0.14);
+  --accent-border: rgba(52, 211, 154, 0.35);
+  --accent-glow: rgba(52, 211, 154, 0.18);
+}
+
+.warning {
+  --accent-color: var(--color-warning);
+  --accent-soft: rgba(251, 191, 60, 0.14);
+  --accent-border: rgba(251, 191, 60, 0.35);
+  --accent-glow: rgba(251, 191, 60, 0.18);
+}
+
+.danger {
+  --accent-color: var(--color-danger);
+  --accent-soft: rgba(252, 109, 109, 0.14);
+  --accent-border: rgba(252, 109, 109, 0.35);
+  --accent-glow: rgba(252, 109, 109, 0.18);
+}

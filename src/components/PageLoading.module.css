@@ -1,0 +1,6 @@
+.wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8);
+}

@@ -1,0 +1,115 @@
+.wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.title {
+  font-size: var(--font-size-2xl);
+  font-weight: 850;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  color: var(--color-text);
+  font-size: var(--font-size-lg);
+}
+
+.completedAt {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.sectionTitle {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  margin-bottom: var(--space-3);
+}
+
+.scores {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--space-2);
+}
+
+.scores li {
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-alt);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.scores strong {
+  font-size: var(--font-size-2xl);
+  font-weight: 800;
+}
+
+.scoreLabel {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.rubric {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.questions {
+  margin: 0;
+  padding-left: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.questions li {
+  padding-left: var(--space-2);
+}
+
+.questionMeta {
+  margin-bottom: var(--space-1);
+}
+
+.questionText {
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+}
+
+.answer {
+  color: var(--color-text);
+  margin: var(--space-1) 0;
+}
+
+.code {
+  background: var(--color-surface-alt);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, monospace);
+  font-size: var(--font-size-sm);
+  overflow-x: auto;
+}
+
+.muted {
+  color: var(--color-text-muted);
+  font-style: italic;
+}

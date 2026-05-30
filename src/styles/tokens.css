@@ -1,0 +1,91 @@
+:root {
+  /* ---- color: surfaces ---- */
+  --color-bg: #06070d;
+  --color-bg-2: #0a0c16;
+  --color-surface: #11141f;
+  --color-surface-2: #171b29;
+  --color-surface-3: #1f2436;
+  --color-border: #262c40;
+  --color-border-strong: #353d57;
+
+  /* ---- color: text ---- */
+  --color-text: #eef1fa;
+  --color-text-muted: #97a1bd;
+  --color-text-subtle: #6b7493;
+
+  /* ---- color: brand / accent ---- */
+  --color-primary: #6d7bff;
+  --color-primary-hover: #828dff;
+  --color-primary-contrast: #ffffff;
+  --color-violet: #a368fc;
+  --color-cyan: #38e0d8;
+  --color-pink: #ff6dc9;
+  --color-success: #34d39a;
+  --color-warning: #fbbf3c;
+  --color-danger: #fc6d6d;
+
+  /* ---- gradients ---- */
+  --gradient-accent: linear-gradient(135deg, #6d7bff 0%, #a368fc 100%);
+  --gradient-accent-soft: linear-gradient(135deg, rgba(109, 123, 255, 0.18), rgba(163, 104, 252, 0.18));
+  --gradient-text: linear-gradient(110deg, #b9c0ff 0%, #ffffff 45%, #c9b3ff 100%);
+  --gradient-text-animated: linear-gradient(110deg, #6d7bff 0%, #a368fc 25%, #38e0d8 50%, #a368fc 75%, #6d7bff 100%);
+  --gradient-cyan: linear-gradient(135deg, #38e0d8 0%, #6d7bff 100%);
+  --gradient-aurora: linear-gradient(135deg, #6d7bff 0%, #a368fc 35%, #ff6dc9 70%, #38e0d8 100%);
+  --gradient-card: linear-gradient(160deg, rgba(23, 27, 41, 0.85) 0%, rgba(17, 20, 31, 0.95) 100%);
+  --gradient-mesh:
+    radial-gradient(at 0% 0%, rgba(109, 123, 255, 0.22), transparent 50%),
+    radial-gradient(at 100% 0%, rgba(163, 104, 252, 0.18), transparent 50%),
+    radial-gradient(at 50% 100%, rgba(56, 224, 216, 0.14), transparent 50%);
+
+  /* ---- spacing ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-8: 3rem;
+  --space-10: 4.5rem;
+  --space-12: 6rem;
+
+  /* ---- radius ---- */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 26px;
+  --radius-2xl: 36px;
+  --radius-pill: 999px;
+
+  /* ---- typography ---- */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --font-size-xs: 0.78rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.85rem;
+  --font-size-2xl: 2.6rem;
+  --font-size-3xl: 3.4rem;
+  --font-size-4xl: 4.4rem;
+
+  /* ---- effects ---- */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 28px 64px rgba(0, 0, 0, 0.55);
+  --shadow-xl: 0 40px 100px rgba(0, 0, 0, 0.65);
+  --glow-primary: 0 8px 30px rgba(109, 123, 255, 0.35);
+  --glow-primary-strong: 0 18px 60px rgba(109, 123, 255, 0.55);
+  --glow-violet: 0 8px 30px rgba(163, 104, 252, 0.35);
+  --glow-cyan: 0 8px 30px rgba(56, 224, 216, 0.35);
+  --glow-soft: 0 0 0 1px rgba(109, 123, 255, 0.25), 0 10px 40px rgba(109, 123, 255, 0.18);
+
+  /* ---- motion ---- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 140ms;
+  --dur-mid: 260ms;
+  --dur-slow: 600ms;
+  --dur-slower: 900ms;
+  --transition: var(--dur-mid) var(--ease-out);
+}
