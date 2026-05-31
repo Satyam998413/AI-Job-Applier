@@ -16,6 +16,7 @@ const baseLinks = [
   { href: "/answers", label: "Answers" },
   { href: "/email", label: "Email" },
   { href: "/assistant", label: "Assistant" },
+   { href: "/settings", label: "Settings" },
  
 ];
 
