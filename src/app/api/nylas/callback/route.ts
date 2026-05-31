@@ -6,7 +6,8 @@ import { env } from "@/lib/env";
 import { dbConnect } from "@/server/db/connect";
 import { User } from "@/server/models/User";
 import { ConnectedEmail } from "@/server/models/ConnectedEmail";
-import { getSession, setSessionCookie } from "@/server/auth/session";
+import { getSession, setSessionCookie, setRefreshCookie } from "@/server/auth/session";
+import { issueRefreshToken } from "@/server/auth/refresh";
 import { getNylas, nylasRedirectUri } from "@/server/services/nylas/nylasClient";
 
 export const runtime = "nodejs";
@@ -79,10 +80,14 @@ export async function GET(req: Request) {
           email: grantedEmail,
           fullName: fallbackName(grantedEmail),
           passwordHash,
+          passwordSetByUser: false, // Mark that user hasn't set their own password
         });
       }
       userId = user.id;
       await setSessionCookie({ userId: user.id, email: user.email });
+      // Issue refresh token for session persistence across page reloads
+      const refresh = await issueRefreshToken(user.id);
+      await setRefreshCookie(refresh);
     }
 
     // Attach (or replace) the user's connected email.

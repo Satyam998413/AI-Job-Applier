@@ -29,6 +29,9 @@ const envSchema = z.object({
   BLOB_READ_WRITE_TOKEN: z.string().optional(),
   /** Whisper transcription model — defaults to OpenAI's `whisper-1`. */
   WHISPER_MODEL: z.string().min(1).default("whisper-1"),
+  /** Optional admin seeding variables. Used by /api/seed/admin. */
+  SEED_ADMIN_EMAIL: z.string().email().optional(),
+  SEED_ADMIN_PASSWORD: z.string().min(8).optional(),
 });
 
 const parsed = envSchema.safeParse(process.env);

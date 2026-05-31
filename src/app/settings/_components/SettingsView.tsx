@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Reveal } from "@/components/Reveal";
+import { TabLoader } from "@/components/TabLoader";
 import { ProfileSection } from "./ProfileSection";
 import { AiProvidersSection } from "./AiProvidersSection";
 import { JsearchSection } from "./JsearchSection";
@@ -24,9 +25,26 @@ const TABS: { key: TabKey; label: string }[] = [
 
 export function SettingsView() {
   const [active, setActive] = useState<TabKey>("general");
+  const [loading, setLoading] = useState(false);
+
+  // Show brief loader when switching tabs
+  function handleTabChange(tab: TabKey) {
+    setLoading(true);
+    setActive(tab);
+    // Hide loader after 300ms (allows content to render)
+    const timer = setTimeout(() => setLoading(false), 300);
+    return () => clearTimeout(timer);
+  }
+
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, [active]);
 
   return (
     <div className={styles.wrap}>
+      <TabLoader visible={loading} />
+      
       <Reveal>
         <header className={styles.header}>
           <h1 className={styles.title}>Settings</h1>
@@ -44,7 +62,7 @@ export function SettingsView() {
               role="tab"
               aria-selected={active === t.key}
               className={active === t.key ? styles.tabActive : styles.tab}
-              onClick={() => setActive(t.key)}
+              onClick={() => handleTabChange(t.key)}
             >
               {t.label}
             </button>
@@ -61,6 +79,14 @@ export function SettingsView() {
         </>
       )}
 
+      {/* {active === "profile" && (
+        <Reveal delay={120}><ProfileSettingsTab /></Reveal>
+      )} */}
+
+      {active === "aiInterview" && (
+        <Reveal delay={120}><AiInterviewTab /></Reveal>
+      )}
+
       {active === "autoApply" && (
         <Reveal delay={120}><AutoApplyTab /></Reveal>
       )}
@@ -69,9 +95,6 @@ export function SettingsView() {
         <Reveal delay={120}><ResumeTab /></Reveal>
       )}
 
-      {active === "aiInterview" && (
-        <Reveal delay={120}><AiInterviewTab /></Reveal>
-      )}
 
       {active === "emailTemplates" && (
         <Reveal delay={120}><EmailTemplatesTab /></Reveal>

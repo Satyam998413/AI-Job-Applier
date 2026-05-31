@@ -40,7 +40,6 @@ export function ProfileSection() {
         method: "PATCH",
         body: JSON.stringify({
           fullName: f.get("fullName"),
-          email: f.get("email"),
           mobile: f.get("mobile") ?? "",
         }),
       });
@@ -68,7 +67,7 @@ export function ProfileSection() {
         <form className={styles.form} onSubmit={onSubmit}>
           <div className={styles.grid}>
             <Input id="fullName" name="fullName" label="Full name" defaultValue={user.fullName} required />
-            <Input id="email" name="email" type="email" label="Email" defaultValue={user.email} required />
+            <Input id="email" name="email" type="email" label="Email (Read-only)" defaultValue={user.email} disabled />
             <Input
               id="mobile"
               name="mobile"
