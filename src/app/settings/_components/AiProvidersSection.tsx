@@ -71,6 +71,7 @@ export function AiProvidersSection() {
             return (
               <ApiKeyRow
                 key={p}
+                provider={p}
                 label={META[p].label}
                 description={META[p].description}
                 configured={row.configured}

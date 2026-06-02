@@ -8,7 +8,9 @@ export type IconName =
   | "arrowRight"
   | "bolt"
   | "shield"
-  | "wand";
+  | "wand"
+  | "help"
+  | "external";
 
 const paths: Record<IconName, React.ReactNode> = {
   sparkles: (
@@ -55,6 +57,19 @@ const paths: Record<IconName, React.ReactNode> = {
     <>
       <path d="M15 4V2M15 10V8M11.5 5.5h-2M20.5 5.5h-2M4 20l11-11" />
       <path d="M18 7l-2-2" />
+    </>
+  ),
+  help: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M9 9c0-1.105.895-2 2-2s2 .895 2 2c0 1-1 2-1 3v1M12 17h.01" />
+    </>
+  ),
+  external: (
+    <>
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h6" />
+      <path d="M15 3h6v6" />
+      <path d="M10 14L21 3" />
     </>
   ),
 };

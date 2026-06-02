@@ -4,10 +4,13 @@ import { useState } from "react";
 import { Button } from "@/components/Button";
 import { Badge } from "@/components/Badge";
 import { Icon } from "@/components/Icon";
+import { type AiProviderName } from "@/types";
 import { ApiKeySetForm } from "./ApiKeySetForm";
+import { ApiKeyHelpModal } from "./ApiKeyHelpModal";
 import styles from "./ApiKeyRow.module.css";
 
 export type ApiKeyRowProps = {
+  provider?: AiProviderName;
   label: string;
   description: string;
   configured: boolean;
@@ -21,6 +24,7 @@ export type ApiKeyRowProps = {
 };
 
 export function ApiKeyRow({
+  provider,
   label,
   description,
   configured,
@@ -33,6 +37,7 @@ export function ApiKeyRow({
   onDelete,
 }: ApiKeyRowProps) {
   const [editing, setEditing] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
 
   async function handleSave(apiKey: string) {
     await onSave(apiKey);
@@ -60,6 +65,11 @@ export function ApiKeyRow({
       <div className={styles.actions}>
         {!editing ? (
           <>
+            {provider && (
+              <Button variant="secondary" size="small" onClick={() => setShowHelp(true)} title="How to get API key">
+                <Icon name="help" size={14} />
+              </Button>
+            )}
             <Button variant="secondary" onClick={() => setEditing(true)} disabled={busy}>
               {configured ? "Replace key" : "Add key"}
             </Button>
@@ -83,6 +93,7 @@ export function ApiKeyRow({
           />
         )}
       </div>
+      {provider && showHelp && <ApiKeyHelpModal provider={provider} onClose={() => setShowHelp(false)} />}
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { Schema, model, models, Types, type InferSchemaType, type Model } from "
 
 export const INTERVIEW_STATUSES = [
   "pending",
+  "preparing",
   "live",
   "completed",
   "scoring",
@@ -14,6 +15,7 @@ const interviewQuestionSchema = new Schema(
   {
     question: { type: String, required: true },
     category: { type: String, required: true },
+    smartAnswer: { type: String, default: "" },
     askedAt: { type: Date, default: null },
     answeredAt: { type: Date, default: null },
     transcript: { type: String, default: "" },
@@ -78,8 +80,15 @@ const interviewSchema = new Schema(
   { timestamps: true },
 );
 
-// Public lookup by shared token.
-interviewSchema.index({ "share.tokenHash": 1 }, { unique: true, sparse: true });
+// Public lookup by shared token (unique only when not null)
+interviewSchema.index(
+  { "share.tokenHash": 1 },
+  { 
+    unique: true,
+    sparse: true,
+    partialFilterExpression: { "share.tokenHash": { $ne: null } }
+  }
+);
 
 export type InterviewDoc = InferSchemaType<typeof interviewSchema> & { _id: Types.ObjectId };
 

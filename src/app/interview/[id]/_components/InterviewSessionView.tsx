@@ -12,6 +12,7 @@ import type { InterviewDto, InterviewShareDto } from "@/types";
 import styles from "./InterviewSessionView.module.css";
 
 type Props = { initial: InterviewDto };
+type RecordingMode = "audio" | "video";
 
 export function InterviewSessionView({ initial }: Props) {
   const router = useRouter();
@@ -20,17 +21,45 @@ export function InterviewSessionView({ initial }: Props) {
   const [transcript, setTranscript] = useState("");
   const [code, setCode] = useState("");
   const [recording, setRecording] = useState(false);
+  const [recordingMode, setRecordingMode] = useState<RecordingMode>("audio");
   const [message, setMessage] = useState("");
   const [share, setShare] = useState<InterviewShareDto | null>(null);
   const [finishing, setFinishing] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
+  const [enableVideo, setEnableVideo] = useState(true);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const startedAtRef = useRef<number>(Date.now());
   const [elapsedSec, setElapsedSec] = useState(0);
+  const videoPreviewRef = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
 
   useEffect(() => {
     const i = setInterval(() => setElapsedSec(Math.floor((Date.now() - startedAtRef.current) / 1000)), 1000);
     return () => clearInterval(i);
+  }, []);
+
+  // Redirect to prepare page if interview is not live/completed/scoring/scored
+  useEffect(() => {
+    if (interview.status === "pending" || interview.status === "preparing") {
+      router.replace(`/interview/${interview.id}/prepare`);
+    }
+  }, [interview.status, interview.id, router]);
+
+  // Auto-read question aloud when it changes
+  useEffect(() => {
+    if (!interview.questions[idx] || speaking) return;
+    readQuestionAloud(interview.questions[idx].question);
+  }, [idx, interview.questions]);
+
+  // Cleanup streams on unmount
+  useEffect(() => {
+    return () => {
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach((t) => t.stop());
+      }
+      window.speechSynthesis?.cancel();
+    };
   }, []);
 
   // Poll status post-finish so the UI shows scoring/scored without a refresh.
@@ -48,22 +77,76 @@ export function InterviewSessionView({ initial }: Props) {
     return () => clearInterval(poll);
   }, [interview.status, interview.id]);
 
+  // Read question aloud with female voice
+  function readQuestionAloud(question: string) {
+    if (!("speechSynthesis" in window)) {
+      setMessage("Text-to-Speech not supported in your browser");
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(question);
+    utterance.rate = 0.95;
+    utterance.pitch = 1.2; // Higher pitch for female voice
+    utterance.volume = 0.8;
+
+    // Try to select female voice if available
+    const voices = window.speechSynthesis.getVoices();
+    const femaleVoice = voices.find(
+      (v) => v.name.includes("female") || v.name.includes("woman") || v.name.includes("Women")
+    ) || voices.find((v) => !v.name.includes("male") && !v.name.includes("man")) || voices[0];
+
+    if (femaleVoice) {
+      utterance.voice = femaleVoice;
+    }
+
+    utterance.onstart = () => setSpeaking(true);
+    utterance.onend = () => setSpeaking(false);
+    utterance.onerror = () => setSpeaking(false);
+
+    window.speechSynthesis.speak(utterance);
+  }
+
   async function startRecording() {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const recorder = new MediaRecorder(stream);
+      const constraints = {
+        audio: true,
+        video: enableVideo ? { width: { ideal: 1280 }, height: { ideal: 720 } } : false,
+      };
+
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      streamRef.current = stream;
+
+      const recorder = new MediaRecorder(stream, {
+        mimeType: enableVideo ? "video/webm;codecs=vp8,opus" : "audio/webm",
+      });
+
       chunksRef.current = [];
       recorder.ondataavailable = (e) => {
         if (e.data.size > 0) chunksRef.current.push(e.data);
       };
       recorder.onstop = () => {
-        for (const t of stream.getTracks()) t.stop();
+        stream.getTracks().forEach((t) => t.stop());
+        if (videoPreviewRef.current) {
+          videoPreviewRef.current.srcObject = null;
+        }
       };
       recorder.start();
       recorderRef.current = recorder;
+
+      if (enableVideo && videoPreviewRef.current) {
+        videoPreviewRef.current.srcObject = stream;
+      }
+
+      setRecordingMode(enableVideo ? "video" : "audio");
       setRecording(true);
     } catch (err) {
-      setMessage(err instanceof Error ? err.message : "Could not access microphone");
+      const errorMsg = err instanceof Error ? err.message : "Could not access media devices";
+      setMessage(errorMsg);
+      if (enableVideo && !errorMsg.includes("video")) {
+        setEnableVideo(false);
+        setMessage("Camera not available, falling back to audio only");
+      }
     }
   }
 
@@ -75,12 +158,17 @@ export function InterviewSessionView({ initial }: Props) {
       r.stop();
     });
     setRecording(false);
-    const blob = new Blob(chunksRef.current, { type: "audio/webm" });
+
+    const mimeType = recordingMode === "video" ? "video/webm" : "audio/webm";
+    const extension = recordingMode === "video" ? "webm" : "webm";
+    const blob = new Blob(chunksRef.current, { type: mimeType });
+
     try {
       const form = new FormData();
-      form.append("file", blob, `q${idx}.webm`);
-      form.append("kind", "audio");
+      form.append("file", blob, `q${idx}.${extension}`);
+      form.append("kind", recordingMode);
       await fetch(`/api/interview/${interview.id}/upload`, { method: "POST", body: form });
+      setMessage(`${recordingMode === "video" ? "Video" : "Audio"} uploaded`);
     } catch (err) {
       setMessage(err instanceof Error ? err.message : "Upload failed");
     }
@@ -99,6 +187,7 @@ export function InterviewSessionView({ initial }: Props) {
   }
 
   function next() {
+    window.speechSynthesis?.cancel();
     setTranscript("");
     setCode("");
     setMessage("");
@@ -106,6 +195,7 @@ export function InterviewSessionView({ initial }: Props) {
   }
 
   async function finish() {
+    window.speechSynthesis?.cancel();
     setFinishing(true);
     try {
       const next = await apiFetch<InterviewDto>(`/api/interview/${interview.id}/finish`, { method: "POST" });
@@ -129,7 +219,16 @@ export function InterviewSessionView({ initial }: Props) {
   }
 
   const q = interview.questions[idx];
-  const isLive = interview.status === "live" || interview.status === "pending";
+  const isLive = interview.status === "live";
+
+  // Don't render if not in live/completed/scoring/scored status
+  if (interview.status === "pending" || interview.status === "preparing") {
+    return (
+      <div style={{ textAlign: "center", padding: "var(--space-8)" }}>
+        <p>Redirecting to interview preparation...</p>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.wrap}>
@@ -149,15 +248,55 @@ export function InterviewSessionView({ initial }: Props) {
         <Card>
           <div className={styles.form}>
             <Badge tone="neutral">{q.category}</Badge>
-            <h2 className={styles.question}>{q.question}</h2>
+            <h2 className={styles.question}>
+              {q.question}
+              {speaking && " 🔊"}
+            </h2>
+            <p className={styles.hint}>
+              AI is reading the question aloud. You can disable and re-read it below.
+            </p>
+            {speaking && <Button onClick={() => window.speechSynthesis?.cancel()}>Stop reading</Button>}
+            {!speaking && <Button onClick={() => readQuestionAloud(q.question)}>🔊 Read again</Button>}
 
+            {/* Video/Audio Recording Section */}
             <div className={styles.field}>
-              <span className={styles.label}>Verbal answer (transcribed by Whisper on finish)</span>
+              <span className={styles.label}>Record your response</span>
+              <div style={{ marginBottom: "var(--space-3)" }}>
+                <label style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", cursor: "pointer" }}>
+                  <input
+                    type="checkbox"
+                    checked={enableVideo}
+                    onChange={(e) => {
+                      if (!recording) setEnableVideo(e.target.checked);
+                    }}
+                    disabled={recording}
+                  />
+                  <span>Include video (if camera available)</span>
+                </label>
+              </div>
+
+              {/* Video Preview */}
+              {recording && enableVideo && (
+                <div style={{ marginBottom: "var(--space-3)", borderRadius: "6px", overflow: "hidden", background: "#000" }}>
+                  <video
+                    ref={videoPreviewRef}
+                    autoPlay
+                    muted
+                    playsInline
+                    style={{ width: "100%", height: "auto", maxHeight: "300px" }}
+                  />
+                </div>
+              )}
+
               <div className={styles.recordRow}>
                 {!recording ? (
-                  <Button onClick={startRecording}>Start recording</Button>
+                  <Button onClick={startRecording}>
+                    {enableVideo ? "🎥 Start video" : "🎤 Start audio"}
+                  </Button>
                 ) : (
-                  <Button onClick={stopAndUpload}>Stop & upload</Button>
+                  <Button onClick={stopAndUpload}>
+                    {recordingMode === "video" ? "⏹️ Stop video" : "⏹️ Stop audio"}
+                  </Button>
                 )}
                 <span className={styles.hint}>
                   Or type your answer below instead.
@@ -204,19 +343,62 @@ export function InterviewSessionView({ initial }: Props) {
       {interview.status === "scored" && (
         <Card>
           <div className={styles.form}>
-            <h2 className={styles.sectionTitle}>Scores</h2>
+            <h2 className={styles.sectionTitle}>Interview Complete ✓</h2>
+
+            {/* Media Playback */}
+            {interview.media && interview.media.length > 0 && (
+              <div style={{ marginBottom: "var(--space-6)" }}>
+                <h3 className={styles.sectionTitle}>Recorded Responses</h3>
+                <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
+                  {interview.media.map((m, i) => (
+                    <div key={i} style={{ padding: "var(--space-4)", background: "rgba(0,0,0,0.02)", borderRadius: "6px" }}>
+                      <p style={{ marginBottom: "var(--space-2)", fontWeight: "bold" }}>
+                        {m.kind === "video" ? "🎥 Video" : "🎤 Audio"} — Question {i + 1}
+                      </p>
+                      {m.kind === "video" ? (
+                        <video
+                          controls
+                          style={{ width: "100%", maxWidth: "100%", borderRadius: "4px" }}
+                          src={m.url}
+                        />
+                      ) : (
+                        <audio
+                          controls
+                          style={{ width: "100%" }}
+                          src={m.url}
+                        />
+                      )}
+                      <p style={{ marginTop: "var(--space-2)", fontSize: "0.85em", color: "var(--color-text-muted)" }}>
+                        {m.durationMs ? `${Math.round(m.durationMs / 1000)}s` : ""}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <h2 className={styles.sectionTitle}>Performance Scores</h2>
             <ul className={styles.scores}>
-              <li><strong>Overall:</strong> {Math.round(interview.scores.overall ?? 0)}/100</li>
+              <li><strong>Overall:</strong> {Math.round(interview.scores.overall ?? 0)}/100 ⭐</li>
               <li><strong>Communication:</strong> {Math.round(interview.scores.communication ?? 0)}/100</li>
               <li><strong>Technical:</strong> {Math.round(interview.scores.technical ?? 0)}/100</li>
               <li><strong>Confidence:</strong> {Math.round(interview.scores.confidence ?? 0)}/100</li>
             </ul>
+
             {interview.scores.rubric.length > 0 && (
-              <details>
-                <summary>Rubric</summary>
+              <details style={{ marginTop: "var(--space-4)" }}>
+                <summary style={{ cursor: "pointer", fontWeight: "bold" }}>
+                  📋 Detailed Feedback ({interview.scores.rubric.length} items)
+                </summary>
                 <ul className={styles.rubric}>
                   {interview.scores.rubric.map((r, i) => (
-                    <li key={i}><strong>{r.criterion} ({r.score}):</strong> {r.comment}</li>
+                    <li key={i}>
+                      <strong>{r.criterion}</strong>
+                      <span style={{ marginLeft: "var(--space-2)", background: "rgba(0,0,0,0.1)", padding: "2px 6px", borderRadius: "3px" }}>
+                        {r.score}/100
+                      </span>
+                      <p style={{ marginTop: "var(--space-1)", color: "var(--color-text-muted)" }}>{r.comment}</p>
+                    </li>
                   ))}
                 </ul>
               </details>

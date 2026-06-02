@@ -8,11 +8,20 @@ import { generateInterviewSession } from "@/server/services/llm/generateIntervie
  * Create a new interview row with LLM-generated questions tailored to the optional
  * job + the candidate's resume. Uses the user's saved interview defaults for
  * count / categories / language.
+ * 
+ * Automatically deletes any existing pending/preparing interviews before creating
+ * a fresh one to ensure a clean start.
  */
 export async function startInterview(
   userId: string,
   options: { jobId?: string | null },
 ): Promise<string> {
+  // Delete any existing pending/preparing interviews to prevent conflicts
+  await Interview.deleteMany({
+    userId,
+    status: { $in: ["pending", "preparing"] }
+  });
+
   const [resume, settings, job] = await Promise.all([
     getDefaultResume(userId),
     UserSettings.findOne({ userId }),
@@ -40,14 +49,14 @@ export async function startInterview(
   const interview = await Interview.create({
     userId,
     jobId: options.jobId ?? null,
-    status: "live",
+    status: "pending",
     language: defaults.language,
     durationMin: defaults.durationMin,
     questions: questions.map((q) => ({
       question: q.question,
       category: q.category,
+      smartAnswer: "",
     })),
-    startedAt: new Date(),
   });
   return String(interview._id);
 }

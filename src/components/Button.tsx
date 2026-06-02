@@ -2,9 +2,11 @@ import Link from "next/link";
 import styles from "./Button.module.css";
 
 type Variant = "primary" | "secondary" | "ghost";
+type Size = "small" | "normal";
 
 type BaseProps = {
   variant?: Variant;
+  size?: Size;
   fullWidth?: boolean;
   children: React.ReactNode;
 };
@@ -15,8 +17,8 @@ type ButtonAsButton = BaseProps &
 type ButtonAsLink = BaseProps & { href: string };
 
 export function Button(props: ButtonAsButton | ButtonAsLink) {
-  const { variant = "primary", fullWidth, children } = props;
-  const className = [styles.btn, styles[variant], fullWidth ? styles.fullWidth : ""]
+  const { variant = "primary", size = "normal", fullWidth, children } = props;
+  const className = [styles.btn, styles[variant], size === "small" ? styles.small : "", fullWidth ? styles.fullWidth : ""]
     .filter(Boolean)
     .join(" ");
 
@@ -30,7 +32,7 @@ export function Button(props: ButtonAsButton | ButtonAsLink) {
     );
   }
 
-  const { variant: _v, fullWidth: _f, children: _c, ...rest } = props as ButtonAsButton;
+  const { variant: _v, size: _s, fullWidth: _f, children: _c, ...rest } = props as ButtonAsButton;
   return (
     <button className={className} {...rest}>
       {label}

@@ -42,6 +42,7 @@ export async function GET(_req: Request, { params }: Ctx) {
       status: dto.status,
       questions: dto.questions,
       scores: dto.scores,
+      media: dto.media,
       completedAt: dto.completedAt,
     };
     return ok(out);

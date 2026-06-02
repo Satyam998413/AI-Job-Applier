@@ -1,0 +1,123 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.modal {
+  background: var(--color-bg-1);
+  border-radius: 8px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-5);
+  border-bottom: 1px solid var(--color-border-1);
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-1);
+  margin: 0;
+}
+
+.content {
+  padding: var(--space-5);
+}
+
+.description {
+  color: var(--color-text-2);
+  font-size: 14px;
+  margin: 0 0 var(--space-4) 0;
+  line-height: 1.5;
+}
+
+.steps {
+  margin-bottom: var(--space-4);
+}
+
+.stepsTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-1);
+  margin: 0 0 var(--space-3) 0;
+}
+
+.stepsList {
+  list-style: decimal;
+  padding-left: var(--space-4);
+  margin: 0;
+  color: var(--color-text-2);
+}
+
+.step {
+  font-size: 13px;
+  margin-bottom: var(--space-2);
+  line-height: 1.5;
+  color: var(--color-text-2);
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border-1);
+}
+
+.link {
+  text-decoration: none;
+  flex: 1;
+}
+
+.link button {
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .modal {
+    width: 95%;
+    max-height: 90vh;
+  }
+
+  .header {
+    padding: var(--space-4);
+  }
+
+  .content {
+    padding: var(--space-4);
+  }
+}

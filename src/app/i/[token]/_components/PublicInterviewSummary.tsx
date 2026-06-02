@@ -53,6 +53,37 @@ export function PublicInterviewSummary({ data }: { data: PublicInterviewDto }) {
         )}
       </Card>
 
+      {data.media && data.media.length > 0 && (
+        <Card>
+          <h2 className={styles.sectionTitle}>Recorded Responses</h2>
+          <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-4)" }}>
+            {data.media.map((m, i) => (
+              <div key={i} style={{ padding: "var(--space-4)", background: "rgba(0,0,0,0.02)", borderRadius: "6px" }}>
+                <p style={{ marginBottom: "var(--space-2)", fontWeight: "bold" }}>
+                  {m.kind === "video" ? "🎥 Video" : "🎤 Audio"} — Question {i + 1}
+                </p>
+                {m.kind === "video" ? (
+                  <video
+                    controls
+                    style={{ width: "100%", maxWidth: "100%", borderRadius: "4px" }}
+                    src={m.url}
+                  />
+                ) : (
+                  <audio
+                    controls
+                    style={{ width: "100%" }}
+                    src={m.url}
+                  />
+                )}
+                <p style={{ marginTop: "var(--space-2)", fontSize: "0.85em", color: "var(--color-text-muted)" }}>
+                  {m.durationMs ? `${Math.round(m.durationMs / 1000)}s` : ""}
+                </p>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+
       <Card>
         <h2 className={styles.sectionTitle}>Question transcript</h2>
         <ol className={styles.questions}>

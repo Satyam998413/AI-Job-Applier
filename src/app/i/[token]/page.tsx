@@ -41,6 +41,7 @@ export default async function PublicInterviewPage({ params }: Props) {
     status: dto.status,
     questions: dto.questions,
     scores: dto.scores,
+    media: dto.media,
     completedAt: dto.completedAt,
   };
 

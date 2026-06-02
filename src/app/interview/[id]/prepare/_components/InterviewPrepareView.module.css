@@ -1,0 +1,152 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  padding: var(--space-6);
+}
+
+.header {
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-4);
+}
+
+.title {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.subtitle {
+  margin: var(--space-2) 0 0 0;
+  color: var(--color-text-muted);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.description {
+  margin: 0;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+.questionsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.questionCard {
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.questionHeader {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color 0.2s;
+}
+
+.questionHeader:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.questionMeta {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.questionNumber {
+  font-size: 0.85em;
+  color: var(--color-text-muted);
+  background: rgba(0, 0, 0, 0.05);
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+
+.questionText {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.expandIcon {
+  position: absolute;
+  right: var(--space-4);
+  top: var(--space-4);
+  color: var(--color-text-muted);
+  font-size: 0.9em;
+}
+
+.questionHeader {
+  position: relative;
+}
+
+.answerSection {
+  padding: var(--space-4);
+  background: rgba(0, 0, 0, 0.02);
+  border-top: 1px solid var(--color-border);
+}
+
+.answerLabel {
+  margin: 0 0 var(--space-2) 0;
+  font-size: 0.95em;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.answerText {
+  margin: 0 0 var(--space-4) 0;
+  padding: var(--space-3);
+  background:  rgba(0, 0, 0, 0.02);
+  border-left: 3px solid var(--color-primary);
+  border-radius: 4px;
+  font-size: 0.95em;
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+.answerTips {
+  padding: var(--space-3);
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.answerTips p {
+  margin: 0 0 var(--space-1) 0;
+  font-weight: 600;
+}
+
+.answerTips ul {
+  margin: 0;
+  padding-left: var(--space-4);
+  list-style: disc;
+}
+
+.answerTips li {
+  margin: var(--space-1) 0;
+  color: var(--color-text-muted);
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}

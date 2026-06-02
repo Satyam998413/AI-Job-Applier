@@ -96,6 +96,7 @@ export function interviewToDto(doc: InterviewDoc): InterviewDto {
     questions: (doc.questions ?? []).map((q) => ({
       question: q.question,
       category: q.category,
+      smartAnswer: q.smartAnswer ?? "",
       askedAt: q.askedAt ? q.askedAt.toISOString() : null,
       answeredAt: q.answeredAt ? q.answeredAt.toISOString() : null,
       transcript: q.transcript ?? "",

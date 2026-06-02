@@ -119,6 +119,7 @@ export type NotificationDto = {
 
 export const INTERVIEW_STATUSES = [
   "pending",
+  "preparing",
   "live",
   "completed",
   "scoring",
@@ -130,6 +131,7 @@ export type InterviewStatus = (typeof INTERVIEW_STATUSES)[number];
 export type InterviewQuestionDto = {
   question: string;
   category: string;
+  smartAnswer: string;
   askedAt: string | null;
   answeredAt: string | null;
   transcript: string;
@@ -181,6 +183,7 @@ export type PublicInterviewDto = {
   status: InterviewStatus;
   questions: InterviewQuestionDto[];
   scores: InterviewScoresDto;
+  media: InterviewMediaDto[];
   completedAt: string | null;
 };
 
@@ -208,7 +211,7 @@ export type AiProviderRowDto = {
   isActive: boolean;
 };
 
-export type UserProfileDto = UserDto & { mobile: string | null };
+export type UserProfileDto = UserDto & { mobile: string | null; passwordSetByUser: boolean };
 
 export type JsearchStatusDto = {
   configured: boolean;

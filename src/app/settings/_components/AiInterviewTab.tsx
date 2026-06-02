@@ -59,7 +59,8 @@ export function AiInterviewTab() {
         body: JSON.stringify(formData),
       });
       
-      router.push(`/interview/${result.id}`);
+      // Go to preparation page instead of recording
+      router.push(`/interview/${result.id}/prepare`);
     } catch (err) {
       console.error("Failed to start interview:", err);
       alert(err instanceof Error ? err.message : "Failed to start interview");

@@ -32,6 +32,7 @@ export async function GET() {
       email: user.email,
       fullName: user.fullName,
       mobile: user.mobile ?? null,
+      passwordSetByUser: user.passwordSetByUser,
     };
     return ok(dto);
   } catch (err) {
@@ -73,6 +74,7 @@ export async function PATCH(req: Request) {
       email: user.email,
       fullName: user.fullName,
       mobile: user.mobile ?? null,
+      passwordSetByUser: user.passwordSetByUser,
     };
     return ok(dto);
   } catch (err) {
